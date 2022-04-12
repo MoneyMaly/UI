@@ -13,6 +13,10 @@
     }
   }
   
+    Nav {
+        background-color: #209CEE;  
+    }
+  
   .App-header {
     background-color: #209CEE;
     min-height: 7vh;
