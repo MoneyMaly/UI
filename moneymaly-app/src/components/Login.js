@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import axios from 'axios'
 
-class Login extends Component {
+export default class Login extends Component {
     state = {
         username: null,
         password: null
@@ -10,9 +11,20 @@ class Login extends Component {
             [e.target.id]: e.target.value
         });
     }
+    get_login_token = () => {
+        const data = 'username=' + this.state.username + '&password=' + this.state.password;
+        axios.post('/token', data)
+            .then(res => {
+                localStorage.setItem('token', res.data.access_token);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state);
+        this.get_login_token();
+        console.log(localStorage.getItem('token'));
     }
     render() {
         return (
@@ -26,5 +38,3 @@ class Login extends Component {
         );
     }
 }
-
-export default Login; 
