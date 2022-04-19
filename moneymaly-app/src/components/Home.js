@@ -1,13 +1,51 @@
-import React from 'react'
+import axios from 'axios';
+import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 
-const Home = () => {
-    return (
-        <div className="container">        
-            <h4 className="center">Home</h4>
-            <p className='center'>Welcome to MoneyMaly Application!</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis dignissimos autem iure qui a dolorem excepturi modi amet placeat! A provident exercitationem atque vel repellat, tenetur obcaecati cum earum quibusdam!</p>
-        </div>
-    )
+class Home extends Component {
+    state = {};
+
+    componentDidMount() {
+        if (localStorage.getItem("user_logged_in")) {
+            axios.get('http://192.116.98.107:8081/users', {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                },
+                params: {
+                    username: localStorage.getItem('username')
+                }
+            }).then(
+                res => {
+                    this.setState({ data: res.data });
+                    console.log(this.state.data)
+                },
+                err => {
+                    console.log(err);
+                }
+            );
+        }
+    }
+
+    render() {
+        if (this.state.data && localStorage.getItem("user_logged_in")) {
+            return (
+                <div className="container">
+                    <h4 className="center">Home</h4>
+                    <h2>Hey: {this.state.data.full_name}</h2>
+                </div>
+            )
+        }
+        else {
+            return (
+                <div className="container">
+                    <h4 className="center">Home</h4>
+                    <h5 className="center">you are not logged in !</h5>
+                    <h5 className="center">Please Login First <NavLink to="/Login">Login</NavLink></h5>
+
+                </div>
+            )
+        }
+    }
 }
 
 export default Home;

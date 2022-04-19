@@ -6,8 +6,10 @@ import Home from './components/Home';
 import About from './components/About';
 import Contact from './components/Contact';
 import Login from './components/Login';
+import Logout from './components/Logout';
+import Signup from './components/Signup';
 
-class App extends Component {
+export default class App extends Component {
     render() {
         return (
             <BrowserRouter>
@@ -18,11 +20,11 @@ class App extends Component {
                         <Route path='/About' component={About} />
                         <Route path='/Contact' component={Contact} />
                         <Route path='/Login' component={Login} />
+                        <Route path='/Logout' component={Logout} />
+                        <Route path='/Signup' component={Signup} />
                     </Switch>
                 </div>
             </BrowserRouter>
         );
     }
 }
-
-export default App;

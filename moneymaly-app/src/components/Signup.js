@@ -2,10 +2,14 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 
-export default class Login extends Component {
+
+export default class Signup extends Component {
     state = {
         username: null,
+        fullname: null,
+        email: null,
         password: null,
+        role: null,
         fireRedirect: false
     }
     handleChange = (e) => {
@@ -15,7 +19,8 @@ export default class Login extends Component {
     }
     get_login_token = () => {
         const data = 'username=' + this.state.username + '&password=' + this.state.password;
-        axios.post('http://192.116.98.107:8081/token', data)            .then(res => {
+        axios.post('http://192.116.98.107:8081/token', data)
+            .then(res => {
                 localStorage.setItem('token', res.data.access_token);
                 localStorage.setItem('username', this.state.username);
                 localStorage.setItem('user_logged_in', true);
@@ -24,20 +29,29 @@ export default class Login extends Component {
                 console.log(err);
             })
         return;
-
     }
     handleSubmit = (e) => {
         e.preventDefault();
-        this.get_login_token();
-        console.log(localStorage.getItem('token'));
+        // this.get_login_token();
+        // console.log(localStorage.getItem('token'));
         setTimeout(() => this.setState({ fireRedirect: true }), 1000);
 
     }
+    setGender(event) {
+        console.log(event.target.value);
+    }
+
+    componentDidUpdate() {
+        alert(document.querySelector('input[name=myRadio]:checked').value);
+    }
+
     render() {
         return (
             <div className='container'>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.handleSubmit} action="#">
                     <label> Username: </label><input type='text' onChange={this.handleChange} id='username' /><br />
+                    <label> Full Name: </label><input type='text' onChange={this.handleChange} id='fullname' /><br />
+                    <label> Email: </label><input type='email' onChange={this.handleChange} id='email' /><br />
                     <label> Password: </label><input type='password' onChange={this.handleChange} id='password' /><br />
                     <button onClick={this.handleSubmit} > Login </button>
                 </form>
@@ -45,4 +59,4 @@ export default class Login extends Component {
             </div>
         );
     }
-}
+} 
