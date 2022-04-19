@@ -10,7 +10,7 @@ import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
+//import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -21,6 +21,7 @@ import Container from '@material-ui/core/Container';
 import Fab from '@material-ui/core/Fab';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Zoom from '@material-ui/core/Zoom';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -97,6 +98,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+tooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+}
+
 function ScrollTop(props) {
     const { children, window } = props;
     const classes = useStyles();
@@ -135,10 +143,6 @@ export default function PrimarySearchAppBar(props) {
         setAnchorEl(event.currentTarget);
     };
 
-    const handleMobileMenuClose = () => {
-        setMobileMoreAnchorEl(null);
-    };
-
     const handleMenuClose = () => {
         setAnchorEl(null);
         handleMobileMenuClose();
@@ -147,6 +151,11 @@ export default function PrimarySearchAppBar(props) {
     const handleMobileMenuOpen = (event) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
+
+    const handleMobileMenuClose = () => {
+        setMobileMoreAnchorEl(null);
+    };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -215,15 +224,17 @@ export default function PrimarySearchAppBar(props) {
         <div className={classes.grow}>
             <AppBar className={classes.appBar} >
                 <Toolbar id="back-to-top-anchor">
-                    <IconButton
-                        edge="start"
-                        className={classes.menuButton}
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleMenu}
-                    >
-                        <MenuIcon />
-                    </IconButton>
+                    <Tooltip title="Menu" arrow>
+                        <IconButton
+                            edge="start"
+                            className={classes.menuButton}
+                            color="inherit"
+                            aria-label="open drawer"
+                            onClick={handleMenu}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                    </Tooltip>
                     <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose} >
                         <MenuItem><Link to="/">Home</Link></MenuItem>
                         <MenuItem><Link to="/About">About</Link></MenuItem>
@@ -234,26 +245,45 @@ export default function PrimarySearchAppBar(props) {
                     </Typography>
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
-                        <IconButton aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <MailIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton aria-label="show 17 new notifications" color="inherit">
-                            <Badge badgeContent={17} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
+                    <Tooltip title="My Messages" arrow>
+                            <IconButton aria-label="show 4 new mails" color="inherit">
+                                <Badge badgeContent={4} color="secondary">
+                                    <MailIcon />
+                                </Badge>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Notifications" arrow>
+                            <IconButton aria-label="show 17 new notifications" color="inherit">
+                                <Badge badgeContent={17} color="secondary">
+                                    <NotificationsIcon />
+                                </Badge>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="My Profile" arrow>
+                            <IconButton                                
+                                color="inherit"
+                                aria-label="open drawer"
+                            >
+                                <AccountCircle />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Logout" arrow>
+                            <IconButton                                
+                                color="inherit"
+                                aria-label="open drawer"
+                            >
+                                <Link to="/Logout">Logout</Link>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Login" arrow>
+                            <IconButton
+                                edge="end"
+                                color="inherit"
+                                aria-label="open drawer"
+                            >
+                                <Link to="/Login">Login</Link>
+                            </IconButton>
+                        </Tooltip>
                     </div>
                     <div className={classes.sectionMobile}>
                         <IconButton
@@ -274,7 +304,7 @@ export default function PrimarySearchAppBar(props) {
                 </Fab>
             </ScrollTop>
             {renderMobileMenu}
-            {renderMenu}            
+            {renderMenu}
         </div>
     );
 }

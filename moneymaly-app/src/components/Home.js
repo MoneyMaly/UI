@@ -6,7 +6,7 @@ class Home extends Component {
     state = {};
 
     componentDidMount() {
-        if (localStorage.getItem("user_logged_in")) {
+        if (localStorage.getItem("token") && localStorage.getItem('username')) {
             axios.get('http://192.116.98.107:8081/users', {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -27,7 +27,7 @@ class Home extends Component {
     }
 
     render() {
-        if (this.state.data && localStorage.getItem("user_logged_in")) {
+        if (this.state.data) {
             return (
                 <div className="container">
                     <h4 className="center">Home</h4>
