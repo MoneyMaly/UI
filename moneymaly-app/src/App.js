@@ -10,13 +10,14 @@ import Logout from './components/Logout';
 import Signup from './components/Signup';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
+import UserProfile from './components/UserProfile';
 
 function Copyright() {
     const style = {
         backgroundColor: "#209cee38",
         textAlign: "center",
         paddingTop: "15px",
-        paddingBottom: "15px",        
+        paddingBottom: "15px",      
         position: "static",
         left: "0px",
         bottom: "0px",
@@ -46,6 +47,7 @@ export default function App() {
                     <Route path='/Login' component={Login} />
                     <Route path='/Logout' component={Logout} />
                     <Route path='/Signup' component={Signup} />
+                    <Route path='/UserProfile' component={UserProfile} />
                 </Switch>
                 <Copyright />
             </div>

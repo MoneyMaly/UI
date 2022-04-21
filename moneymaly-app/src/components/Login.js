@@ -78,6 +78,7 @@ export default function Login() {
                     <Typography component="h1" variant="h5">
                         You'r already Signed in ...
                         </Typography>
+                    <Redirect to="/" />
                 </div>
             </Container>
         ) :

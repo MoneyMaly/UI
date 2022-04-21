@@ -22,7 +22,8 @@ import Fab from '@material-ui/core/Fab';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Zoom from '@material-ui/core/Zoom';
 import Tooltip from '@material-ui/core/Tooltip';
-
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import SvgIcon from '@material-ui/core/SvgIcon';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -260,28 +261,24 @@ export default function PrimarySearchAppBar(props) {
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="My Profile" arrow>
-                            <IconButton                                
-                                color="inherit"
-                                aria-label="open drawer"
-                            >
-                                <AccountCircle />
+                            <IconButton color="inherit">
+                                <Link to="/UserProfile">
+                                    <AccountCircle />
+                                </Link>
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Logout" arrow>
-                            <IconButton                                
-                                color="inherit"
-                                aria-label="open drawer"
-                            >
-                                <Link to="/Logout">Logout</Link>
+                            <IconButton color="inherit">
+                                <Link to="/Logout">
+                                    <ExitToAppIcon />
+                                </Link>
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Login" arrow>
-                            <IconButton
-                                edge="end"
-                                color="inherit"
-                                aria-label="open drawer"
-                            >
-                                <Link to="/Login">Login</Link>
+                            <IconButton color="inherit">
+                                <Link to="/Login">
+                                    <ExitToAppIcon />
+                                </Link>
                             </IconButton>
                         </Tooltip>
                     </div>
@@ -307,34 +304,5 @@ export default function PrimarySearchAppBar(props) {
             {renderMenu}
         </div>
     );
-}
-
-// import React, { Component } from 'react';
-// import { Link, NavLink } from 'react-router-dom';
-
-
-// class NavBar extends Component {
-//     render() {
-//         return (
-//             <nav className="nav-wrapper" >
-//                 <div className="container">
-//                     <Link className="brand-logo center" to='/'>MoneyMaly</Link>
-//                     <ul className='left'>
-//                         <li><Link to="/">Home</Link></li>
-//                         <li><NavLink to="/About">About</NavLink></li>
-//                         <li><NavLink to="/Contact">Contact Us</NavLink></li>
-
-//                     </ul>
-//                     <ul className='right'>
-//                         <li><NavLink to="/Logout">Logout</NavLink></li>
-//                         <li><NavLink to="/Login">Login</NavLink></li>
-//                         <li><NavLink to="/Signup">Sign Up</NavLink></li>
-//                     </ul>
-//                 </div>
-//             </nav>
-//         )
-//     }
-// }
-
-// export default NavBar; 
-
+};
+    
