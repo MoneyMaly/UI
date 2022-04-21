@@ -55,7 +55,7 @@ export default class Signup extends Component {
                     <label> Password: </label><input type='password' onChange={this.handleChange} id='password' /><br />
                     <button onClick={this.handleSubmit} > Login </button>
                 </form>
-                {this.state.fireRedirect ? (<Redirect to="/" />) : (' ')}
+                {this.state.fireRedirect ? (<Redirect to="/Login" />) : (' ')}
             </div>
         );
     }
