@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import desktopImage from '../images/MoneyLifecycle.png';
 import mobileImage from '../images/MoneyLifecycle-mobile.png';
@@ -10,9 +9,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import { Card, Button } from '@material-ui/core';
-import Container from '@material-ui/core/Container';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { Card } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     root: {
