@@ -32,15 +32,9 @@ export default class Signup extends Component {
     }
     handleSubmit = (e) => {
         e.preventDefault();
-        // this.get_login_token();
-        // console.log(localStorage.getItem('token'));
         setTimeout(() => this.setState({ fireRedirect: true }), 1000);
 
     }
-    setGender(event) {
-        console.log(event.target.value);
-    }
-
     componentDidUpdate() {
         alert(document.querySelector('input[name=myRadio]:checked').value);
     }

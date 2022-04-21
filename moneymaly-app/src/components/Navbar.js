@@ -19,6 +19,8 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Zoom from '@material-ui/core/Zoom';
 import Tooltip from '@material-ui/core/Tooltip';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import HomeIcon from '@material-ui/icons/Home';
+import InfoIcon from '@material-ui/icons/Info';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -169,10 +171,7 @@ export default function PrimarySearchAppBar(props) {
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             open={isMenuOpen}
             onClose={handleMenuClose}
-        >
-            {/* <MenuItem onClick={handleMenuClose}>My Profile</MenuItem> */}
-            {/* <MenuItem onClick={handleMenuClose}>Logout</MenuItem> */}
-        </Menu>
+            ></Menu>
     );
 
     const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -202,16 +201,17 @@ export default function PrimarySearchAppBar(props) {
                 </IconButton>
                 <p>Notifications</p>
             </MenuItem>
-            <MenuItem onClick={handleProfileMenuOpen}>
-                <IconButton
-                    aria-label="account of current user"
-                    aria-controls="primary-search-account-menu"
-                    aria-haspopup="true"
-                    color="inherit"
-                >
+            <MenuItem component={Link} to={'/UserProfile'}>
+                <IconButton color="inherit">
                     <AccountCircle />
                 </IconButton>
-                <p>Profile</p>
+                <p>My Profile</p>
+            </MenuItem>
+            <MenuItem component={Link} to={'/Logout'}>
+                <IconButton color="inherit">
+                    <ExitToAppIcon />
+                </IconButton>
+                Logout
             </MenuItem>
         </Menu>
     );
@@ -232,9 +232,18 @@ export default function PrimarySearchAppBar(props) {
                         </IconButton>
                     </Tooltip>
                     <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose} >
-                        <MenuItem><Link to="/">Home</Link></MenuItem>
-                        <MenuItem><Link to="/About">About</Link></MenuItem>
-                        <MenuItem><Link to="/Contact">Contact</Link></MenuItem>
+                    <MenuItem component={Link} to={'/'}>
+                        <IconButton color="inherit"><HomeIcon /></IconButton>
+                                Home
+                        </MenuItem>
+                        <MenuItem component={Link} to={'/About'}>
+                            <IconButton color="inherit"><InfoIcon /></IconButton>
+                                About
+                        </MenuItem>
+                        <MenuItem component={Link} to={'/Contact'}>
+                            <IconButton color="inherit"><MailIcon /></IconButton>
+                            Contact Us
+                        </MenuItem>   
                     </Menu>
                     <Typography className={classes.title} variant="h6" noWrap align="center">
                         MoneyMaly
@@ -257,21 +266,14 @@ export default function PrimarySearchAppBar(props) {
                         </Tooltip>
                         <Tooltip title="My Profile" arrow>
                             <IconButton color="inherit">
-                                <Link to="/UserProfile">
+                            <Link to="/UserProfile" style={{ color: 'inherit', textDecoration: 'inherit' }}>
                                     <AccountCircle />
                                 </Link>
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Logout" arrow>
                             <IconButton color="inherit">
-                                <Link to="/Logout">
-                                    <ExitToAppIcon />
-                                </Link>
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Login" arrow>
-                            <IconButton color="inherit">
-                                <Link to="/Login">
+                            <Link to="/Logout" style={{ color: 'inherit', textDecoration: 'inherit' }}>
                                     <ExitToAppIcon />
                                 </Link>
                             </IconButton>
