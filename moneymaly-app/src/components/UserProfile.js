@@ -16,12 +16,12 @@ function render_user_logged_in(data) {
     return (
         <div>
         <h1 className="center">User Profile</h1>
-            <h2>full_name: {data.full_name}</h2>
-            <h2>user_name: {data.username}</h2>
-            <h2>role: {data.role}</h2>
-            <h2>email: {data.email}</h2>
-            <h2>id: {data._id}</h2>
-            <h2>disabled: {(data.disabled).toString()}</h2>
+            <h2>Full Name: {data.full_name}</h2>
+            <h2>Username: {data.username}</h2>
+            <h2>Role: {data.role}</h2>
+            <h2>Email: {data.email}</h2>
+            <h2>Id: {data._id}</h2>
+            <h2>Disabled: {(data.disabled).toString()}</h2>
         </div>
     )
 };

@@ -19,6 +19,8 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         align: 'center',
         paddingBottom: theme.spacing(4),
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2),
         color: '#209cee'
     },
     gird: {
@@ -55,7 +57,7 @@ export default function About() {
     const moneyImage = window.innerWidth >= 650 ? desktopImage : mobileImage;
         <div className={classes.root}>
             <Typography className={classes.title} variant='h4' noWrap >
-                About MoneyMaly
+            About Us
             </Typography>
             <Grid container className={classes.grid} justify="center">
                 <Grid item xs={10} md={8}>
