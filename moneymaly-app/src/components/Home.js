@@ -27,15 +27,15 @@ export default function Home() {
             },
             err => {
                 console.log(err);
-            }
-        );
+            });
     };
     useEffect(() => {
         if (localStorage.getItem("token") && localStorage.getItem('username')) {
             GetUserDataFromServer();
         }
-    });
-    return (
+    }, []);
+
+        return (
         state.userData ?
             (
                 <Container component="main" maxWidth="xs">
