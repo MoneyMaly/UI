@@ -36,6 +36,7 @@ function render_user_bank_accounts_list(bank_account_list) {
     }
     return (
         <div>
+            <h1>Bank Accounts</h1>
             {bank_account_list.account_list.map((account) =>
                 bank_account_object(account))}
         </div>
