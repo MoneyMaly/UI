@@ -72,8 +72,6 @@ export default function Signup() {
 
     const handleSubmitClick = (e) => {
         e.preventDefault();
-    
-        console.log(state);
         create_new_user();
         // TODO: run validation on form data 
     };

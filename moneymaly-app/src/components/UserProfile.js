@@ -1,32 +1,19 @@
 import { Redirect } from 'react-router';
 import React, { useState, useEffect } from 'react';
-import { Container, makeStyles, Typography } from '@material-ui/core';
-import { validate_user_token, get_user_bank_accounts_list } from '../adapters/user_service_adapter';
+import { Container, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
+import { get_user_data_with_token } from '../adapters/user_service_adapter';
+import { get_user_bank_accounts_list } from '../adapters/bank_service_adapter';
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+        flexGrow: 1,
+    },
     paper: {
-        marginTop: theme.spacing(2),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        color: 'primary'
+        padding: theme.spacing(2),
+        textAlign: 'center',
+        color: theme.palette.secondary.main
     }
 }));
-function render_user_logged_in(data) {
-    if (data.full_name) {
-        return (
-            <div>
-                <h1 className="center">User Profile</h1>
-                <h2>Full Name: {data.full_name}</h2>
-                <h2>Username: {data.username}</h2>
-                <h2>Role: {data.role}</h2>
-                <h2>Email: {data.email}</h2>
-                <h2>Id: {data._id}</h2>
-                <h2>Disabled: {(data.disabled).toString()}</h2>
-            </div>
-        )
-    }
-};
 
 function bank_account_object(bank_account) {
     return (
@@ -41,7 +28,6 @@ function bank_account_object(bank_account) {
 
 function render_user_bank_accounts_list(bank_account_list) {
     if (bank_account_list.account_list === []) {
-        console.log(bank_account_list.account_list)
         return (
             <div>
                 Bank Account of Users
@@ -71,30 +57,54 @@ export default function UserProfile() {
     });
 
     const classes = useStyles();
-    useEffect(() => {
-            // console.log(validate_user_token(localStorage.getItem('username'), localStorage.getItem('token')));
+    function render_user_logged_in(data) {
+        if (data.full_name) {
+            return (
+                <Paper className={classes.paper}>
+                    <h1>Account Information</h1>
+                    <h3>Full Name: {data.full_name}</h3>
+                    <h3>Username: {data.username}</h3>
+                    <h3>Role: {data.role}</h3>
+                    <h3>Email: {data.email}</h3>
+                    <h3>Id: {data._id}</h3>
+                    <h3>Disabled: {(data.disabled).toString()}</h3>
+                </Paper>
+            )
+        }
+    };
 
+    useEffect(() => {
         if (localStorage.getItem("token") && localStorage.getItem('username')) {
-            validate_user_token(localStorage.getItem('username'), localStorage.getItem('token'))
+            get_user_data_with_token(localStorage.getItem('username'), localStorage.getItem('token'))
             .then(data => {
                 setUserProfileData(data);
             });
         get_user_bank_accounts_list(localStorage.getItem('username'), localStorage.getItem('token'))
             .then(data => {
                 setUserBankAccountsList(prevState => ({ ...prevState, account_list: data }));
-                console.log(data);
             });
     } 
 }, []);
     
     return (
         localStorage.getItem('token') ? (
-            <Container component="main" maxWidth="xs">
-                <div className={classes.paper}>
-                    {render_user_logged_in(userProfileData)}
-                    {render_user_bank_accounts_list(userBankAccountsList)}
-                </div>
-            </Container>
+            <div className={classes.root}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <Paper className={classes.paper}><h1>User Profile</h1></Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        {render_user_logged_in(userProfileData)}
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Paper className={classes.paper}>
+                            {render_user_bank_accounts_list(userBankAccountsList)}
+                        </Paper>
+                    </Grid>
+
+
+                </Grid>
+            </div>
         ) :
             (
                 <Container component="main" maxWidth="xs">

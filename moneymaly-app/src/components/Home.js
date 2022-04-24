@@ -1,7 +1,7 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
+import { get_user_data_with_token } from '../adapters/user_service_adapter';
 
 export default function Home() {
     const [state, setState] = useState({
@@ -15,23 +15,12 @@ export default function Home() {
             <h5 className="center">Please Login First <NavLink to="/Login">Login</NavLink></h5>
         </Container>
     );
-    const GetUserDataFromServer = () => {
-        axios.get('http://192.116.98.107:8081/users', {
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
-            },
-            params: { username: localStorage.getItem('username') }
-        }).then(
-            res => {
-                setState(prevState => ({ ...prevState, userData: res.data }));
-            },
-            err => {
-                console.log(err);
-            });
-    };
+
     useEffect(() => {
         if (localStorage.getItem("token") && localStorage.getItem('username')) {
-            GetUserDataFromServer();
+            get_user_data_with_token(localStorage.getItem('username'), localStorage.getItem("token")).then(data => {
+                setState(prevState => ({ ...prevState, userData: data }));
+            });
         }
     }, []);
 

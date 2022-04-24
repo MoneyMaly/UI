@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -13,6 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { creat_user_token, user_token_validation } from '../adapters/user_service_adapter';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -50,28 +50,25 @@ export default function Login() {
         }))
     };
 
-    const get_user_token = () => {
-        const data = 'username=' + state.username + '&password=' + state.password;
-        axios.post('http://192.116.98.107:8081/token', data)            .then(res => {
-                localStorage.setItem('token', res.data.access_token);
-                localStorage.setItem('username', state.username);
-                setState(prevState => ({ ...prevState, user_logged_in: true }));
-                setTimeout(null, 1000);
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        };
-    
-        const handleSubmitClick = (e) => {
+ 
+    const handleSubmitClick = (e) => {
         e.preventDefault();
-        get_user_token();
+        creat_user_token(state.username, state.password).then(data => {
+            setState(prevState => ({ ...prevState, user_logged_in: true }));
+        });
+        setTimeout(null, 1000);
     };
 
     const classes = useStyles();
+    
+    useEffect(() => {
+        user_token_validation(localStorage.getItem('username'), localStorage.getItem('token')).then(data => {
+            setState(prevState => ({ ...prevState, user_logged_in: data }));
+        });
+    }, []);
 
     return (
-        localStorage.getItem('token') ? (
+        localStorage.getItem('token') && localStorage.getItem('username') && state.user_logged_in ? (
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <div className={classes.paper}>
