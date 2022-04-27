@@ -17,4 +17,20 @@ export function get_user_bank_accounts_list(username, token) {
             return null;
         }
     );
+};
+
+export function delete_user_bank_accounts_list(username, account_number, token) {
+    var url = urljoin(bank_service_url, '/users/', username, 'bankaccounts', account_number)
+    return axios.delete(url, {
+        headers: { "Authorization": `Bearer ${token}` },
+        params: { username: username, account_number: account_number }
+    }).then(
+        res => {
+            return res.data;
+        },
+        err => {
+            console.log(err);
+            return null;
+        }
+    );
 }; 

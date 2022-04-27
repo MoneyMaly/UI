@@ -1,8 +1,15 @@
 import { Redirect } from 'react-router';
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
+import { Button, Container, Fab, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import { get_user_data_with_token } from '../adapters/user_service_adapter';
-import { get_user_bank_accounts_list } from '../adapters/bank_service_adapter';
+import { get_user_bank_accounts_list, delete_user_bank_accounts_list } from '../adapters/bank_service_adapter';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Draggable from 'react-draggable';
+import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -11,46 +18,24 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         padding: theme.spacing(2),
         textAlign: 'center',
-        color: theme.palette.secondary.main
+        color: theme.palette.secondary.main,
+        variant: 'outlined'
+    },
+    paperData: {
+        textAlign: 'center',
+        color: theme.palette.primary.main
+    },
+    addButton: {
+        backgroundColor: theme.palette.success.main
     }
 }));
-
-function bank_account_object(bank_account) {
-    return (
-        <ul>
-            <li><h2>owner: {bank_account.owner}</h2></li>
-            <li>account_number: {bank_account.account_number}</li>
-            <li>ssn: {bank_account.ssn}</li>
-            <li>username: {bank_account.username}</li>
-        </ul>
-    )
-};
-
-function render_user_bank_accounts_list(bank_account_list) {
-    if (bank_account_list.account_list === []) {
-        return (
-            <div>
-                Bank Account of Users
-            </div>
-        );
-    }
-    return (
-        <div>
-            <h1>Bank Accounts</h1>
-            {bank_account_list.account_list.map((account) =>
-                bank_account_object(account))}
-        </div>
-    );
-};
 
 export default function UserProfile() {
     const [userProfileData, setUserProfileData] = useState({
         username: "",
         role: "",
         email: "",
-        full_name: "",
-        disabled: false,
-        _id: ""
+        full_name: ""
     });
 
     const [userBankAccountsList, setUserBankAccountsList] = useState({
@@ -58,6 +43,100 @@ export default function UserProfile() {
     });
 
     const classes = useStyles();
+
+    function PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+    function DraggableRemoveBankAccountDialog(props) {
+        const [open, setOpen] = React.useState(false);
+        const handleClickOpen = () => {
+            setOpen(true);
+        };
+        const handleClose = () => {
+            setOpen(false);
+        };
+        const HandleRemoveBankAccount = (account_number) => {
+            delete_user_bank_accounts_list(localStorage.getItem('username'), account_number, localStorage.getItem('token'))
+                .then(data => {
+                    get_user_bank_accounts_list(localStorage.getItem('username'), localStorage.getItem('token'))
+                        .then(data => {
+                            setUserBankAccountsList(prevState => ({ ...prevState, account_list: data }));
+                        });
+                });
+            setOpen(false);
+        };
+
+        return (
+            <div>
+                <Button variant="contained" color="secondary" onClick={handleClickOpen}>
+                    Remove
+                </Button>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    PaperComponent={PaperComponent}
+                    aria-labelledby="draggable-dialog-title"
+                >
+                    <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                        Remove Bank Account
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Are you sure you want to remove this bank account number {props.account_number} ? To remove click Remove Bank Account, else click Cancel.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button autoFocus onClick={handleClose} variant="contained" color="secondary.light">
+                            Cancel
+                        </Button>
+                        <Button onClick={() => HandleRemoveBankAccount(props.account_number)} variant="contained" color="secondary">
+                            Remove Bank Account
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    };
+
+    function bank_account_object(bank_account, classes) {
+        return (
+            <Paper className={classes.paperData}>
+                <h3>owner: {bank_account.owner}</h3>
+                <h4>account_number: {bank_account.account_number}</h4>
+                <h4>ssn: {bank_account.ssn}</h4>
+                <h4>username: {bank_account.username}</h4>
+                <DraggableRemoveBankAccountDialog account_number={bank_account.account_number} />
+            </Paper>
+        )
+    };
+
+    function render_user_bank_accounts_list(bank_account_list) {
+        if (bank_account_list.account_list.length == 0) {
+            return (
+                <div>
+                    <h1>Bank Accounts</h1>
+                    <h3>Please add your bank account</h3>
+                </div>
+            );
+        }
+        return (
+            <div>
+                <h1>Bank Accounts</h1>
+                <Button >
+                    <Fab className={classes.addButton} size="medium" aria-label="scroll back to top">
+                        <AddIcon />
+                    </Fab>
+                </Button>
+                {bank_account_list.account_list.map((account) =>
+                    bank_account_object(account, classes))}
+            </div>
+        );
+    };
+
     function render_user_logged_in(data) {
         if (data.full_name) {
             return (
@@ -67,9 +146,8 @@ export default function UserProfile() {
                     <h3>Username: {data.username}</h3>
                     <h3>Role: {data.role}</h3>
                     <h3>Email: {data.email}</h3>
-                    <h3>Id: {data._id}</h3>
-                    <h3>Disabled: {(data.disabled).toString()}</h3>
-                </Paper>
+                    <Button variant="contained" color="primary">Edit</Button>
+                    </Paper>
             )
         }
     };
@@ -102,8 +180,6 @@ export default function UserProfile() {
                             {render_user_bank_accounts_list(userBankAccountsList)}
                         </Paper>
                     </Grid>
-
-
                 </Grid>
             </div>
         ) :
