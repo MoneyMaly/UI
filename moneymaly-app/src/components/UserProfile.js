@@ -1,15 +1,17 @@
 import { Redirect } from 'react-router';
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Fab, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
+import { Button, Container, Fab, Grid, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
 import { get_user_data_with_token } from '../adapters/user_service_adapter';
-import { get_user_bank_accounts_list, delete_user_bank_accounts_list } from '../adapters/bank_service_adapter';
+import { get_user_bank_accounts_list, delete_user_bank_accounts_list, add_user_bank_accounts_list } from '../adapters/bank_service_adapter';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Draggable from 'react-draggable';
-import AddIcon from '@material-ui/icons/Add';
+import DeleteTwoToneIcon from '@material-ui/icons/DeleteTwoTone';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,7 +28,13 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.primary.main
     },
     addButton: {
-        backgroundColor: theme.palette.success.main
+        color: "#fff",
+        backgroundColor: theme.palette.success.main,
+        color: '#fff',
+        '&:hover': {
+            backgroundColor: theme.palette.success.light,
+            color: '#fff'
+        },
     }
 }));
 
@@ -51,6 +59,122 @@ export default function UserProfile() {
             </Draggable>
         );
     }
+    function DraggableAddBankAccountDialog(props) {
+        const [open, setOpen] = React.useState(false);
+        const handleClickOpen = () => {
+            setOpen(true);
+        };
+        const handleClose = () => {
+            setOpen(false);
+        };
+
+        const [AddBankDataState, setAddBankDataState] = useState({
+            owner_name: null,
+            account_number: null,
+            ssn: null
+        });
+
+        const handleChange = (e) => {
+            const { id, value } = e.target
+            setAddBankDataState(prevState => ({
+                ...prevState,
+                [id]: value
+            }));
+        };
+
+        const handleSubmitNewBankAccount = () => {
+            localStorage.getItem('username')
+            console.log(AddBankDataState)
+            add_user_bank_accounts_list(localStorage.getItem('username'), AddBankDataState.owner_name, AddBankDataState.ssn,
+                AddBankDataState.account_number, localStorage.getItem('token'))
+                .then(data => {
+                    get_user_bank_accounts_list(localStorage.getItem('username'), localStorage.getItem('token'))
+                        .then(data => {
+                            setUserBankAccountsList(prevState => ({ ...prevState, account_list: data }));
+                        });
+                });
+            setOpen(false);
+        };
+
+        const values_not_empty = AddBankDataState.owner_name && AddBankDataState.account_number && AddBankDataState.ssn
+
+        const name_error = (AddBankDataState.owner_name == null || AddBankDataState.owner_name == '') ? true : isNaN(AddBankDataState.owner_name);
+        const account_number_error = (AddBankDataState.account_number == null || AddBankDataState.account_number == '') ? false : isNaN(AddBankDataState.account_number);
+        const ssn_error = (AddBankDataState.ssn == null || AddBankDataState.ssn == '') ? false : isNaN(AddBankDataState.ssn);
+
+        return (
+            <div>
+                <Button variant="contained" className={props.classes.addButton} onClick={handleClickOpen}>
+                    Add Bank Account
+                    <AddCircleIcon style={{ paddingLeft: '6px' }} />
+                </Button>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    PaperComponent={PaperComponent}
+                    aria-labelledby="draggable-dialog-title"
+                >
+                    <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                        <AccountBalanceIcon style={{ paddingRight: '6px' }} /> Add Bank Account
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Add bank account to your usernamme: <b>{localStorage.getItem('username')}</b>.
+                            <form className={classes.form} noValidate>
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="owner_name"
+                                    label="Owner Name"
+                                    name="owner_name"
+                                    autoFocus
+                                    helperText={name_error ? "" : "String only"}
+                                    error={!name_error}
+                                    onChange={handleChange}
+                                />
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="account_number"
+                                    label="Account Number"
+                                    name="account_number"
+                                    helperText={account_number_error ? "Number only" : ""}
+                                    error={account_number_error}
+                                    onChange={handleChange}
+                                />
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="ssn"
+                                    label="Ssn Numberr"
+                                    name="ssn"
+                                    helperText={ssn_error ? "Number only" : ""}
+                                    error={ssn_error}
+                                    onChange={handleChange}
+                                />
+                            </form>
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button autoFocus onClick={handleClose} variant="contained">
+                            Cancel
+                        </Button>
+                        <Button onClick={handleSubmitNewBankAccount} disabled={(!name_error || account_number_error || ssn_error) || !values_not_empty} variant="contained" className={props.classes.addButton}>
+                            Add Bank Account
+                            <AddCircleIcon style={{ paddingLeft: '6px' }} />
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    };
+
     function DraggableRemoveBankAccountDialog(props) {
         const [open, setOpen] = React.useState(false);
         const handleClickOpen = () => {
@@ -73,7 +197,7 @@ export default function UserProfile() {
         return (
             <div>
                 <Button variant="contained" color="secondary" onClick={handleClickOpen}>
-                    Remove
+                Remove <DeleteTwoToneIcon style={{ paddingLeft: '6px' }} />
                 </Button>
                 <Dialog
                     open={open}
@@ -82,19 +206,20 @@ export default function UserProfile() {
                     aria-labelledby="draggable-dialog-title"
                 >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        Remove Bank Account
+                    <AccountBalanceIcon style={{ paddingRight: '10px' }} />Remove Bank Account
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Are you sure you want to remove this bank account number {props.account_number} ? To remove click Remove Bank Account, else click Cancel.
+                        Are you sure you want to remove this bank account number <b>{props.account_number}</b> ? To remove click Remove Bank Account, else cilck Cancel.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button autoFocus onClick={handleClose} variant="contained" color="secondary.light">
+                    <Button autoFocus onClick={handleClose} variant="contained">
                             Cancel
                         </Button>
                         <Button onClick={() => HandleRemoveBankAccount(props.account_number)} variant="contained" color="secondary">
                             Remove Bank Account
+                            <DeleteTwoToneIcon style={{ paddingLeft: '6px' }} />
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -115,22 +240,19 @@ export default function UserProfile() {
     };
 
     function render_user_bank_accounts_list(bank_account_list) {
-        if (bank_account_list.account_list.length == 0) {
+        if (bank_account_list.account_list.length === 0) {
             return (
                 <div>
                     <h1>Bank Accounts</h1>
                     <h3>Please add your bank account</h3>
+                    <DraggableAddBankAccountDialog classes={classes} />
                 </div>
             );
         }
         return (
             <div>
                 <h1>Bank Accounts</h1>
-                <Button >
-                    <Fab className={classes.addButton} size="medium" aria-label="scroll back to top">
-                        <AddIcon />
-                    </Fab>
-                </Button>
+                <DraggableAddBankAccountDialog classes={classes} />
                 {bank_account_list.account_list.map((account) =>
                     bank_account_object(account, classes))}
             </div>
@@ -146,8 +268,7 @@ export default function UserProfile() {
                     <h3>Username: {data.username}</h3>
                     <h3>Role: {data.role}</h3>
                     <h3>Email: {data.email}</h3>
-                    <Button variant="contained" color="primary">Edit</Button>
-                    </Paper>
+                </Paper>
             )
         }
     };

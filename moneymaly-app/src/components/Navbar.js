@@ -26,8 +26,17 @@ const useStyles = makeStyles((theme) => ({
     root: {
         position: 'fixed',
         bottom: theme.spacing(6),
-        right: theme.spacing(2),
+        right: theme.spacing(2)
     },
+    scrollUpFab:{
+        color: "#fff",
+        backgroundColor: '#209CEE',
+        color: '#fff',
+        '&:hover': {
+            backgroundColor: '#67bcf3',
+            color: '#fff'
+        },
+    };
     appBar: {
         background: '#209CEE',
         position: 'static'
@@ -94,14 +103,13 @@ const useStyles = makeStyles((theme) => ({
             display: 'none',
         },
     },
-}));
-
-tooltip: {
+    tooltip: {
     backgroundColor: theme.palette.common.white,
     color: 'rgba(0, 0, 0, 0.87)',
     boxShadow: theme.shadows[1],
     fontSize: 11,
-}
+    }
+}));
 
 function ScrollTop(props) {
     const { children, window } = props;
@@ -289,7 +297,7 @@ export default function PrimarySearchAppBar(props) {
                 </Toolbar>
             </AppBar>
             <ScrollTop {...props}>
-                <Fab color="secondary" size="small" aria-label="scroll back to top">
+                <Fab className={classes.scrollUpFab} size="small" aria-label="scroll back to top">
                     <KeyboardArrowUpIcon />
                 </Fab>
             </ScrollTop>

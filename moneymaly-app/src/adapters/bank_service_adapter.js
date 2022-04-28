@@ -18,6 +18,21 @@ export function get_user_bank_accounts_list(username, token) {
         }
     );
 };
+export function add_user_bank_accounts_list(username, owner, ssn, account_number, token) {
+    const data = { username: username, owner: owner, ssn: ssn, account_number: account_number };
+    var url = urljoin(bank_service_url, '/users/', username, 'bankaccounts')
+    return axios.post(url, data,
+        { headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" } }
+    ).then(
+        res => {
+            return res.data;
+        },
+        err => {
+            console.log(err);
+            return null;
+        }
+    );
+};
 
 export function delete_user_bank_accounts_list(username, account_number, token) {
     var url = urljoin(bank_service_url, '/users/', username, 'bankaccounts', account_number)

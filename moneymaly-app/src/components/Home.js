@@ -28,8 +28,8 @@ export default function Home() {
         state.userData ?
             (
                 <Container component="main" maxWidth="xs">
-                    <h4 className="center">Home</h4>
-                    <h2>full_name: {state.userData.full_name}</h2>
+                    <h2 className="center">Home</h2>
+                    <h3>Hello {state.userData.full_name}, Welcome to MoneyMaly!</h3>
                 </Container>
             ) :
             (
