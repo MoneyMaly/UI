@@ -21,6 +21,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
+import AssessmentIcon from '@material-ui/icons/Assessment';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -211,6 +212,12 @@ export default function PrimarySearchAppBar(props) {
                 </IconButton>
                 <p>My Profile</p>
             </MenuItem>
+            <MenuItem component={Link} to={'/UserDashboard'}>
+                <IconButton color="inherit">
+                    <AssessmentIcon />
+                </IconButton>
+                <p>Dashboard</p>
+            </MenuItem>
             <MenuItem component={Link} to={'/Logout'}>
                 <IconButton color="inherit">
                     <ExitToAppIcon />
@@ -272,6 +279,13 @@ export default function PrimarySearchAppBar(props) {
                             <IconButton color="inherit">
                             <Link to="/UserProfile" style={{ color: 'inherit', textDecoration: 'inherit' }}>
                                     <AccountCircle />
+                                </Link>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Dashboard" arrow>
+                            <IconButton color="inherit">
+                                <Link to="/UserDashboard" style={{ color: 'inherit', textDecoration: 'inherit' }}>
+                                    <AssessmentIcon />
                                 </Link>
                             </IconButton>
                         </Tooltip>
