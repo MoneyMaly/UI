@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 import { get_user_data_with_token } from '../adapters/user_service_adapter';
+import jwt_decode from "jwt-decode";
 
 export default function Home() {
     const [state, setState] = useState({
@@ -23,9 +24,22 @@ export default function Home() {
             });
         }
     }, []);
+   
+    const IsUserTokenValid = () => {
+        try {
+            var tokenExp = jwt_decode(localStorage.getItem('token')).exp;
+            if (tokenExp < Date.now() / 1000) {
+                return false;
+            }
+            return true;
+        } catch (InvalidTokenError) {
+            console.warn('Invalid User Token')
+            return false;
+        }
+    };
 
         return (
-        state.userData ?
+            (state.userData != null && IsUserTokenValid()) ?
             (
                 <Container component="main" maxWidth="xs">
                     <h2 className="center">Home</h2>

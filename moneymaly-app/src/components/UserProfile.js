@@ -1,8 +1,8 @@
-import { Redirect } from 'react-router';
 import React, { useState, useEffect } from 'react';
 import { Button, Container, Fab, Grid, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
 import { get_user_data_with_token } from '../adapters/user_service_adapter';
 import { get_user_bank_accounts_list, delete_user_bank_accounts_list, add_user_bank_accounts_list } from '../adapters/bank_service_adapter';
+import { NavLink } from 'react-router-dom';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -12,6 +12,7 @@ import Draggable from 'react-draggable';
 import DeleteTwoToneIcon from '@material-ui/icons/DeleteTwoTone';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import jwt_decode from "jwt-decode";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -98,9 +99,9 @@ export default function UserProfile() {
 
         const values_not_empty = AddBankDataState.owner_name && AddBankDataState.account_number && AddBankDataState.ssn
 
-        const name_error = (AddBankDataState.owner_name == null || AddBankDataState.owner_name == '') ? true : isNaN(AddBankDataState.owner_name);
-        const account_number_error = (AddBankDataState.account_number == null || AddBankDataState.account_number == '') ? false : isNaN(AddBankDataState.account_number);
-        const ssn_error = (AddBankDataState.ssn == null || AddBankDataState.ssn == '') ? false : isNaN(AddBankDataState.ssn);
+        const name_error = (AddBankDataState.owner_name === null || AddBankDataState.owner_name === '') ? true : isNaN(AddBankDataState.owner_name);
+        const account_number_error = (AddBankDataState.account_number === null || AddBankDataState.account_number === '') ? false : isNaN(AddBankDataState.account_number);
+        const ssn_error = (AddBankDataState.ssn === null || AddBankDataState.ssn === '') ? false : isNaN(AddBankDataState.ssn);
 
         return (
             <div>
@@ -240,7 +241,7 @@ export default function UserProfile() {
     };
 
     function render_user_bank_accounts_list(bank_account_list) {
-        if (bank_account_list.account_list.length === 0) {
+        if (bank_account_list.account_list === null || bank_account_list.account_list.length === 0) {
             return (
                 <div>
                     <h1>Bank Accounts</h1>
@@ -260,7 +261,7 @@ export default function UserProfile() {
     };
 
     function render_user_logged_in(data) {
-        if (data.full_name) {
+        if (data != null && data.full_name) {
             return (
                 <Paper className={classes.paper}>
                     <h1>Account Information</h1>
@@ -285,9 +286,29 @@ export default function UserProfile() {
             });
     } 
 }, []);
-    
+    const IsUserTokenValid = () => {
+        try {
+            var tokenExp = jwt_decode(localStorage.getItem('token')).exp;
+            if (tokenExp < Date.now() / 1000) {
+                return false;
+            }
+            return true;
+        } catch (InvalidTokenError) {
+            console.warn('Invalid User Token')
+            return false;
+        }
+    };
+
+    const renderUserNotLoggedIn = (
+        <Container component="main" maxWidth="xs">
+            <h4 className="center">Home</h4>
+            <h5 className="center">you are not logged in !</h5>
+            <h5 className="center">Please Login First <NavLink to="/Login">Login</NavLink></h5>
+        </Container>
+    );
+
     return (
-        localStorage.getItem('token') ? (
+        IsUserTokenValid() ? (
             <div className={classes.root}>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
@@ -305,14 +326,7 @@ export default function UserProfile() {
             </div>
         ) :
             (
-                <Container component="main" maxWidth="xs">
-                    <div className={classes.paper}>
-                        <Typography component="h1" variant="h5">
-                            You Are Not Logged In ...
-                       </Typography>
-                        <Redirect to="/Login" />
-                    </div>
-                    </Container>
+                renderUserNotLoggedIn
             )
     );
 };

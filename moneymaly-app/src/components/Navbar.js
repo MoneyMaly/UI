@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
         bottom: theme.spacing(6),
         right: theme.spacing(2)
     },
-    scrollUpFab:{
+    scrollUpFab: {
         color: "#fff",
         backgroundColor: '#209CEE',
         color: '#fff',
@@ -49,11 +49,9 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(2),
     },
     title: {
-        display: 'none',
-        [theme.breakpoints.up('sm')]: {
-            display: 'block',
-        },
-        flexGrow: 1
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center'
     },
     search: {
         position: 'relative',
@@ -77,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
         pointerEvents: 'none',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     inputRoot: {
         color: 'inherit',
@@ -256,7 +254,7 @@ export default function PrimarySearchAppBar(props) {
                             Contact Us
                         </MenuItem>   
                     </Menu>
-                    <Typography className={classes.title} variant="h6" noWrap align="center">
+                    <Typography className={classes.title} variant="h6" noWrap>
                         MoneyMaly
                     </Typography>
                     <div className={classes.grow} />
