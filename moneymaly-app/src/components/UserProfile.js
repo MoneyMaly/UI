@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Fab, Grid, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
+import { Button, Container, Grid, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
 import { get_user_data_with_token } from '../adapters/user_service_adapter';
 import { get_user_bank_accounts_list, delete_user_bank_accounts_list, add_user_bank_accounts_list } from '../adapters/bank_service_adapter';
 import { NavLink } from 'react-router-dom';
@@ -13,6 +13,8 @@ import DeleteTwoToneIcon from '@material-ui/icons/DeleteTwoTone';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import jwt_decode from "jwt-decode";
+import clsx from 'clsx';
+import { Card, CardHeader, IconButton, CardActions, CardContent } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -28,6 +30,16 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center',
         color: theme.palette.primary.main
     },
+    accountCardData: {
+        padding: theme.spacing(1),
+        textAlign: 'left'
+    },
+    expand: {
+        marginLeft: 'auto',
+        transition: theme.transitions.create('transform', {
+            duration: theme.transitions.duration.shortest,
+        }),
+    },   
     addButton: {
         color: "#fff",
         backgroundColor: theme.palette.success.main,
@@ -197,9 +209,9 @@ export default function UserProfile() {
 
         return (
             <div>
-                <Button variant="contained" color="secondary" onClick={handleClickOpen}>
-                Remove <DeleteTwoToneIcon style={{ paddingLeft: '6px' }} />
-                </Button>
+                <IconButton className={clsx(classes.expand, { [classes.expandOpen]: expanded, })} onClick={handleClickOpen} color="secondary" title={"Remove Bank Account"}>
+                    <DeleteTwoToneIcon />
+                </IconButton>
                 <Dialog
                     open={open}
                     onClose={handleClose}
@@ -228,16 +240,34 @@ export default function UserProfile() {
         );
     };
 
-    function bank_account_object(bank_account, classes) {
+    function DisplayBankAccount(bank_account) {
         return (
-            <Paper className={classes.paperData}>
-                <h3>owner: {bank_account.owner}</h3>
-                <h4>account_number: {bank_account.account_number}</h4>
-                <h4>ssn: {bank_account.ssn}</h4>
-                <h4>username: {bank_account.username}</h4>
-                <DraggableRemoveBankAccountDialog account_number={bank_account.account_number} />
-            </Paper>
-        )
+            <Card className={classes.accountCardData}>
+                <CardHeader
+                    avatar={
+                        <AccountBalanceIcon style={{ paddingRight: '6px' }} />
+                    }
+                    title={'Account Number:  ' + bank_account.account_number}
+                    subheader={"Owner: " + bank_account.owner}
+                />
+                <CardContent>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        This Bank Account own by <b>{bank_account.owner}.</b>
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        <b>ssn: {bank_account.ssn}</b>
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        <b>Username: {bank_account.username}</b>
+                    </Typography>
+                </CardContent>
+                <CardActions disableSpacing>
+                    <IconButton className={clsx(classes.expand, { [classes.expandOpen]: expanded })}>
+                        <DraggableRemoveBankAccountDialog account_number={bank_account.account_number} />
+                    </IconButton>
+                </CardActions>
+            </Card>
+        );
     };
 
     function render_user_bank_accounts_list(bank_account_list) {
@@ -255,7 +285,7 @@ export default function UserProfile() {
                 <h1>Bank Accounts</h1>
                 <DraggableAddBankAccountDialog classes={classes} />
                 {bank_account_list.account_list.map((account) =>
-                    bank_account_object(account, classes))}
+                    DisplayBankAccount(account))}
             </div>
         );
     };
@@ -302,7 +332,7 @@ export default function UserProfile() {
     const renderUserNotLoggedIn = (
         <Container component="main" maxWidth="xs">
             <h4 className="center">Home</h4>
-            <h5 className="center">you are not logged in !</h5>
+            <h5 className="center">You are not logged in !</h5>
             <h5 className="center">Please Login First <NavLink to="/Login">Login</NavLink></h5>
         </Container>
     );
