@@ -43,6 +43,7 @@ export default function Signup() {
         password: null,
         password_repeat: null,
         role: "private",
+        phone: null,
         user_signed_up: false
     });
 
@@ -124,6 +125,18 @@ export default function Signup() {
                                 id="username"
                                 label="Username"
                                 name="username"
+                                autoFocus
+                                onChange={handleChange}
+                            />
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="phone"
+                                label="Phone"
+                                name="phone"
+                                type="phone"
                                 autoFocus
                                 onChange={handleChange}
                             />

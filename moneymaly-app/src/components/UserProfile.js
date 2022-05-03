@@ -56,7 +56,8 @@ export default function UserProfile() {
         username: "",
         role: "",
         email: "",
-        full_name: ""
+        full_name: "",
+        phone: ""
     });
 
     const [userBankAccountsList, setUserBankAccountsList] = useState({
@@ -298,6 +299,7 @@ export default function UserProfile() {
                     <h3>Full Name: {data.full_name}</h3>
                     <h3>Username: {data.username}</h3>
                     <h3>Email: {data.email}</h3>
+                    <h3>Phone: {data.phone}</h3>
                 </Paper>
             )
         }

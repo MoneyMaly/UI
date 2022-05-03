@@ -40,8 +40,7 @@ export default function ComparatorSortingGrid(props) {
     ];
 
     //ToDO: add button for set sector, update or insert new one
-    //ToDo: fix onChange selected date the table is changed
-    //ToDo: fix No Data Avialabe for this date if i dont already click GO button
+    //ToDo: Add anomaly - get last 3 month by default
     return (
         <div style={{ flex: 1, flexDirection: 'row', textAlign: "center" }}>
             <DataGrid autoHeight disableSelectionOnClick rowsPerPageOptions={[5, 10, 20, 50, 100]} sortModel={sortModel} rows={props.data} columns={columns} />
