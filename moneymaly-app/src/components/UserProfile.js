@@ -165,7 +165,7 @@ export default function UserProfile() {
                                     required
                                     fullWidth
                                     id="ssn"
-                                    label="Ssn Numberr"
+                                    label="Ssn Number"
                                     name="ssn"
                                     helperText={ssn_error ? "Number only" : ""}
                                     error={ssn_error}
@@ -297,7 +297,6 @@ export default function UserProfile() {
                     <h1>Account Information</h1>
                     <h3>Full Name: {data.full_name}</h3>
                     <h3>Username: {data.username}</h3>
-                    <h3>Role: {data.role}</h3>
                     <h3>Email: {data.email}</h3>
                 </Paper>
             )

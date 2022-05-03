@@ -13,6 +13,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import { range } from 'lodash';
+import EnhancedTable from './ExpensesAndIncome';
+import ComparatorSortingGrid from './ExpensesAndIncome';
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -123,6 +126,7 @@ export default function UserDashboard() {
         const handleAccountChange = (event) => {
             var selectedAccountData = filter(userBankAccounts.account_list, { 'account_number': event.target.value })[0]
             setUserBankAccounts(prevState => ({ ...prevState, selectedAccount: event.target.value, selectedAccountData: selectedAccountData }));
+            setUserAccountBalances(prevState => ({ ...prevState, selectedBankAccountBalance: [] }));
         };
 
         return (
@@ -212,11 +216,10 @@ export default function UserDashboard() {
             get_bank_account_balance(selectedDates.month, selectedDates.year);
         };
 
-        function FinancialDataObject(price, subject) {
+        function FinancialDataObject(price, subject, date) {
             return (
                 <div id={subject + price}>
-                    <h3>subject: {subject}</h3>
-                    <h3>price: {price}</h3>
+                    <h3>Subject: <u>{subject}</u>  Price: <u>{price}</u> Date: {date}</h3>
                 </div>
             );
         };
@@ -229,8 +232,8 @@ export default function UserDashboard() {
                     </div>
                 ) :
                     (<div>
-                        {userAccountBalances.selectedBankAccountBalance.map((item) =>
-                            FinancialDataObject(item.price, item.subject))}
+                        <ComparatorSortingGrid data={userAccountBalances.selectedBankAccountBalance.map((item, index) =>
+                            ({ price: item.price, subject: item.subject, date: moment(item.date).format("DD-MM-YYYY"), id: index + 1 }))} />
                     </div>
                     )
             );
