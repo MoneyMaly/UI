@@ -2,7 +2,7 @@ import { Card, CardHeader, Avatar, IconButton, CardMedia, CardActions, CardConte
 import jwt_decode from "jwt-decode";
 import filter from 'lodash/filter';
 import React, { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Redirect } from 'react-router-dom';
 import { get_user_bank_accounts_list, get_user_monthly_balance, get_account_monthly_balance } from '../adapters/bank_service_adapter';
 import { get_user_data_with_token } from '../adapters/user_service_adapter';
 import clsx from 'clsx';
@@ -78,7 +78,7 @@ export default function UserDashboard() {
         selectedBankAccountBalance: []
     });
     const [selectedDates, setSelectedDates] = useState({
-        month: 4,
+        month: 6,
         year: 2022
     });
 
@@ -216,24 +216,16 @@ export default function UserDashboard() {
             get_bank_account_balance(selectedDates.month, selectedDates.year);
         };
 
-        function FinancialDataObject(price, subject, date) {
-            return (
-                <div id={subject + price}>
-                    <h3>Subject: <u>{subject}</u>  Price: <u>{price}</u> Date: {date}</h3>
-                </div>
-            );
-        };
         function ExpensesAndIncomeObjects() {
-            console.log(userAccountBalances.selectedBankAccountBalance);
             return (
-                userAccountBalances.selectedBankAccountBalance === [] ? (
+                userAccountBalances.selectedBankAccountBalance.length === 0 ? (
                     <div>
-                        <h1>shit stuff</h1>
+                        <h3>No Data Avialabe for this date</h3>
                     </div>
                 ) :
                     (<div>
-                        <ComparatorSortingGrid data={userAccountBalances.selectedBankAccountBalance.map((item, index) =>
-                            ({ price: item.price, subject: item.subject, date: moment(item.date).format("DD-MM-YYYY"), id: index + 1 }))} />
+                        <ComparatorSortingGrid accountData={userBankAccounts.selectedAccountData} data={userAccountBalances.selectedBankAccountBalance.map((item, index) =>
+                            ({ price: item.price, subject: item.subject, date: moment(item.date).format("DD-MM-YYYY"), id: index }))} />
                     </div>
                     )
             );
@@ -358,6 +350,7 @@ export default function UserDashboard() {
             <h4 className="center">Home</h4>
             <h5 className="center">you are not logged in !</h5>
             <h5 className="center">Please Login First <NavLink to="/Login">Login</NavLink></h5>
+            <Redirect to="/" />
         </Container>
     );
    
