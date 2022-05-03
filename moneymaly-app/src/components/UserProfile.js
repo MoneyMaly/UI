@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Grid, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
+import { Avatar, Button, Container, Grid, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
 import { get_user_data_with_token } from '../adapters/user_service_adapter';
 import { get_user_bank_accounts_list, delete_user_bank_accounts_list, add_user_bank_accounts_list } from '../adapters/bank_service_adapter';
 import { NavLink } from 'react-router-dom';
@@ -296,10 +296,21 @@ export default function UserProfile() {
             return (
                 <Paper className={classes.paper}>
                     <h1>Account Information</h1>
-                    <h3>Full Name: {data.full_name}</h3>
-                    <h3>Username: {data.username}</h3>
-                    <h3>Email: {data.email}</h3>
-                    <h3>Phone: {data.phone}</h3>
+                    <Card className={classes.accountCardData}>
+                        <CardHeader
+                            avatar={<Avatar style={{ backgroundColor: "black" }} />}
+                            title={data.full_name}
+                            subheader={"Username: " + data.username}
+                        />
+                        <CardContent>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                Hello {data.full_name}, your Email address is:  <b>{data.email}</b>
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                Your Phone number is:  <b>{data.phone}</b>
+                            </Typography>
+                        </CardContent>
+                    </Card>
                 </Paper>
             )
         }
