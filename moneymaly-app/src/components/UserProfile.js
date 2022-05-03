@@ -14,6 +14,7 @@ import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import jwt_decode from "jwt-decode";
 import clsx from 'clsx';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { Card, CardHeader, IconButton, CardActions, CardContent } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         padding: theme.spacing(2),
         textAlign: 'center',
-        color: theme.palette.secondary.main,
+        color: theme.palette.primary.main,
         variant: 'outlined'
     },
     paperData: {
@@ -31,16 +32,21 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.primary.main
     },
     accountCardData: {
-        padding: theme.spacing(1),
+        padding: theme.spacing(0),
+        marginBottom: "5%",
         textAlign: 'left'
     },
     expand: {
-        marginLeft: 'auto',
+        marginLeft: "90%",
+        marginTop: "-10%",
         transition: theme.transitions.create('transform', {
             duration: theme.transitions.duration.shortest,
         }),
     },   
-    addButton: {
+    deleteButton: {
+        padding: theme.spacing(0)
+    },
+    addButtonPopup: {
         color: "#fff",
         backgroundColor: theme.palette.success.main,
         color: '#fff',
@@ -48,6 +54,13 @@ const useStyles = makeStyles((theme) => ({
             backgroundColor: theme.palette.success.light,
             color: '#fff'
         },
+    },
+    addButton: {
+        padding: theme.spacing(0),
+        color: theme.palette.success.main,
+        '&:hover': {
+            color: theme.palette.success.light
+        }       
     }
 }));
 
@@ -106,7 +119,7 @@ export default function UserProfile() {
                         .then(data => {
                             setUserBankAccountsList(prevState => ({ ...prevState, account_list: data }));
                         });
-                });
+                })
             setOpen(false);
         };
 
@@ -118,10 +131,9 @@ export default function UserProfile() {
 
         return (
             <div>
-                <Button variant="contained" className={props.classes.addButton} onClick={handleClickOpen}>
-                    Add Bank Account
-                    <AddCircleIcon style={{ paddingLeft: '6px' }} />
-                </Button>
+                <IconButton className={props.classes.addButton} onClick={handleClickOpen} title={"Add Bank Account"}>
+                    <AddCircleIcon style={{ fontSize: 60 }} />
+                </IconButton>
                 <Dialog
                     open={open}
                     onClose={handleClose}
@@ -179,7 +191,7 @@ export default function UserProfile() {
                         <Button autoFocus onClick={handleClose} variant="contained">
                             Cancel
                         </Button>
-                        <Button onClick={handleSubmitNewBankAccount} disabled={(!name_error || account_number_error || ssn_error) || !values_not_empty} variant="contained" className={props.classes.addButton}>
+                        <Button onClick={handleSubmitNewBankAccount} disabled={(!name_error || account_number_error || ssn_error) || !values_not_empty} variant="contained" className={props.classes.addButtonPopup}>
                             Add Bank Account
                             <AddCircleIcon style={{ paddingLeft: '6px' }} />
                         </Button>
@@ -210,7 +222,7 @@ export default function UserProfile() {
 
         return (
             <div>
-                <IconButton className={clsx(classes.expand, { [classes.expandOpen]: expanded, })} onClick={handleClickOpen} color="secondary" title={"Remove Bank Account"}>
+                <IconButton onClick={handleClickOpen} color="secondary" title={"Remove Bank Account"} className={classes.deleteButton}>
                     <DeleteTwoToneIcon />
                 </IconButton>
                 <Dialog
@@ -252,21 +264,17 @@ export default function UserProfile() {
                     subheader={"Owner: " + bank_account.owner}
                 />
                 <CardContent>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        This Bank Account own by <b>{bank_account.owner}.</b>
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        <b>ssn: {bank_account.ssn}</b>
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
+                <Typography variant="body2" color="textSecondary" component="p" >
+                        <b>Account Owner: {bank_account.owner}</b><br />
+                        <b>ssn: {bank_account.ssn}</b><br />
                         <b>Username: {bank_account.username}</b>
                     </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p" >
+                        <IconButton className={clsx(classes.expand, { [classes.expandOpen]: expanded })}>
+                            <DraggableRemoveBankAccountDialog account_number={bank_account.account_number} />
+                        </IconButton>
+                    </Typography>
                 </CardContent>
-                <CardActions disableSpacing>
-                    <IconButton className={clsx(classes.expand, { [classes.expandOpen]: expanded })}>
-                        <DraggableRemoveBankAccountDialog account_number={bank_account.account_number} />
-                    </IconButton>
-                </CardActions>
             </Card>
         );
     };
@@ -284,9 +292,9 @@ export default function UserProfile() {
         return (
             <div>
                 <h1>Bank Accounts</h1>
-                <DraggableAddBankAccountDialog classes={classes} />
                 {bank_account_list.account_list.map((account) =>
                     DisplayBankAccount(account))}
+                <DraggableAddBankAccountDialog classes={classes} />
             </div>
         );
     };
@@ -294,7 +302,7 @@ export default function UserProfile() {
     function render_user_logged_in(data) {
         if (data != null && data.full_name) {
             return (
-                <Paper className={classes.paper}>
+                <Paper className={classes.paper} elevation={0}>
                     <h1>Account Information</h1>
                     <Card className={classes.accountCardData}>
                         <CardHeader
