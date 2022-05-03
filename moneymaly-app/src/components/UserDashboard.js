@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 import filter from 'lodash/filter';
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { get_user_bank_accounts_list } from '../adapters/bank_service_adapter';
+import { get_user_bank_accounts_list, get_user_monthly_balance, get_account_monthly_balance } from '../adapters/bank_service_adapter';
 import { get_user_data_with_token } from '../adapters/user_service_adapter';
 import clsx from 'clsx';
 import Collapse from '@material-ui/core/Collapse';
@@ -12,20 +12,33 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import { range } from 'lodash';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1
     },
     expensesAndIncomePaper: {
-        padding: theme.spacing(1),
-        textAlign: 'center',
+        padding: theme.spacing(2),
+        paddingLeft: theme.spacing(10),
+        textAlign: 'left',
         color: theme.palette.info.main
     },
     paper: {
         padding: theme.spacing(1),
         textAlign: 'center',
         color: theme.palette.info.main
+    },
+    showResultButton: {
+        margin: theme.spacing(1),
+        marginLeft: theme.spacing(2),
+        color: "#fff",
+        backgroundColor: theme.palette.success.main,
+        color: '#fff',
+        '&:hover': {
+            backgroundColor: theme.palette.success.light,
+            color: '#fff'
+        },
     },
     paperAccounts: {
         padding: theme.spacing(10),
@@ -57,6 +70,29 @@ export default function UserDashboard() {
         selectedAccount: "",
         selectedAccountData: {}
     });
+    const [userAccountBalances, setUserAccountBalances] = useState({
+        bankAccountsBalance: [],
+        selectedBankAccountBalance: []
+    });
+    const [selectedDates, setSelectedDates] = useState({
+        month: 4,
+        year: 2022
+    });
+
+    function get_user_accounts_balance(month, year) {
+        get_user_monthly_balance(localStorage.getItem('username'), localStorage.getItem('token'), month, year)
+            .then(data => {
+                setUserAccountBalances(prevState => ({ ...prevState, bankAccountsBalance: data }));
+            });
+    };
+
+    function get_bank_account_balance(month, year) {
+        get_account_monthly_balance(localStorage.getItem('username'), localStorage.getItem('token'),
+            userBankAccounts.selectedAccountData.account_number, userBankAccounts.selectedAccountData.ssn, userBankAccounts.selectedAccountData.owner, month, year)
+            .then(data => {
+                setUserAccountBalances(prevState => ({ ...prevState, selectedBankAccountBalance: data }));
+            });
+    };
     useEffect(() => {
         if (localStorage.getItem("token") && localStorage.getItem('username')) {
             get_user_data_with_token(localStorage.getItem('username'), localStorage.getItem('token'))
@@ -95,7 +131,7 @@ export default function UserDashboard() {
                     <TextField
                         id="outlined-select-user-account"
                         select
-                        label="Select Account"
+                        label="Account"
                         value={userBankAccounts.selectedAccount}
                         onChange={handleAccountChange}
                         helperText="Please select your account"
@@ -166,6 +202,140 @@ export default function UserDashboard() {
             </Card>
         );
     };
+    function DisplayExpensesAndIncome() {
+        const handleDateChange = (e) => {
+            const { id, value } = e.target
+            setSelectedDates(prevState => ({ ...prevState, [id]: value }));
+        };
+
+        const handelSearchExpensesAndIncome = (e) => {
+            get_bank_account_balance(selectedDates.month, selectedDates.year);
+        };
+
+        function FinancialDataObject(price, subject) {
+            return (
+                <div id={subject + price}>
+                    <h3>subject: {subject}</h3>
+                    <h3>price: {price}</h3>
+                </div>
+            );
+        };
+        function ExpensesAndIncomeObjects() {
+            console.log(userAccountBalances.selectedBankAccountBalance);
+            return (
+                userAccountBalances.selectedBankAccountBalance === [] ? (
+                    <div>
+                        <h1>shit stuff</h1>
+                    </div>
+                ) :
+                    (<div>
+                        {userAccountBalances.selectedBankAccountBalance.map((item) =>
+                            FinancialDataObject(item.price, item.subject))}
+                    </div>
+                    )
+            );
+        };
+        const months = [
+            {
+                value: '1',
+                label: 'January'
+            },
+            {
+                value: '2',
+                label: 'February'
+            },
+            {
+                value: '3',
+                label: 'March'
+            },
+            {
+                value: '4',
+                label: 'April'
+            },
+            {
+                value: '5',
+                label: 'May'
+            },
+            {
+                value: '6',
+                label: 'June'
+            },
+            {
+                value: '7',
+                label: 'July'
+            },
+            {
+                value: '8',
+                label: 'August'
+            },
+            {
+                value: '9',
+                label: 'September'
+            },
+            {
+                value: '10',
+                label: 'October',
+            },
+            {
+                value: '11',
+                label: 'November'
+            },
+            {
+                value: '12',
+                label: 'December'
+            }
+        ];
+        const years = Array.apply(null, Array(7)).map(function (_, i) { return { 'value': i + 2015, 'label': i + 2015 }; })
+        const monthAndYearListTextField = (
+            <div>
+                <TextField
+                    id="month"
+                    name="month"
+                    select
+                    label="Month"
+                    value={selectedDates.month}
+                    helperText="Please select Month"
+                    variant="outlined"
+                    onChange={handleDateChange}
+                    SelectProps={{
+                        native: true,
+                    }}
+                >
+                    {months.map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </TextField>
+                <TextField
+                    id="year"
+                    name="year"
+                    select
+                    label="Year"
+                    value={selectedDates.year}
+                    helperText="Please select Year"
+                    variant="outlined"
+                    onChange={handleDateChange}
+                    SelectProps={{
+                        native: true,
+                    }}
+                >
+                    {years.map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </TextField>
+                <Button autoFocus className={classes.showResultButton} onClick={handelSearchExpensesAndIncome} variant="contained">GO!</Button>
+            </div>
+        );
+        return (
+            <div>
+                {monthAndYearListTextField}
+                {ExpensesAndIncomeObjects()}
+            </div>
+        );
+    };
 
     const IsUserTokenValid = () => {
         try {
@@ -211,6 +381,7 @@ export default function UserDashboard() {
                     <Grid item xs={12}>
                         <Paper className={classes.expensesAndIncomePaper}>
                             <h1>Expenses & Income</h1>
+                            <DisplayExpensesAndIncome />
                         </Paper>
                     </Grid>
                 </Grid>
