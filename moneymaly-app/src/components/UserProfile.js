@@ -14,7 +14,6 @@ import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import jwt_decode from "jwt-decode";
 import clsx from 'clsx';
-import DeleteIcon from '@material-ui/icons/Delete';
 import { Card, CardHeader, IconButton, CardActions, CardContent } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
