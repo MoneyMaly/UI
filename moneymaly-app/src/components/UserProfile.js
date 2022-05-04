@@ -94,13 +94,11 @@ export default function UserProfile() {
         const handleClose = () => {
             setOpen(false);
         };
-
         const [AddBankDataState, setAddBankDataState] = useState({
             owner_name: null,
             account_number: null,
             ssn: null
         });
-
         const handleChange = (e) => {
             const { id, value } = e.target
             setAddBankDataState(prevState => ({

@@ -7,13 +7,8 @@ import { get_user_bank_accounts_list, get_user_monthly_balance, get_account_mont
 import { get_user_data_with_token } from '../adapters/user_service_adapter';
 import clsx from 'clsx';
 import Collapse from '@material-ui/core/Collapse';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import { range } from 'lodash';
-import EnhancedTable from './ExpensesAndIncome';
 import ComparatorSortingGrid from './ExpensesAndIncome';
 import moment from "moment";
 
