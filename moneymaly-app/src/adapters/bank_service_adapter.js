@@ -53,7 +53,7 @@ export function delete_user_bank_accounts_list(username, account_number, token) 
         }
     );
 }; 
-// Banking Service
+// Banking Service - Account Balance
 export function get_user_monthly_balance(username, token, month, year) {
     var url = urljoin(bank_service_url, '/users/', username, 'bankaccounts', 'balance')
     return axios.get(url, {
@@ -70,7 +70,7 @@ export function get_user_monthly_balance(username, token, month, year) {
     );
 };
 
-// Banking Service
+// Banking Service - Account Balance
 export function get_account_monthly_balance(username, token, account_number, ssn, owner, month, year) {
     var url = urljoin(bank_service_url, '/users/', username, 'bankaccounts', account_number)
     return axios.get(url, {
@@ -86,3 +86,36 @@ export function get_account_monthly_balance(username, token, account_number, ssn
         }
     );
 }; 
+
+// Users Deals
+export function get_user_deals_by_account_number(username, token, account_number) {
+    var url = urljoin(bank_service_url, '/users/', username, 'bankaccounts', account_number, '/deals')
+    return axios.get(url, {
+        headers: { "Authorization": `Bearer ${token}` }
+    }).then(
+        res => {
+            return res.data;
+        },
+        err => {
+            console.log(err);
+            return null;
+        }
+    );
+};
+
+// Users Deals
+export function add_user_deal_by_account_number(username, token, account_number, company, sector, extra_info_json) {
+    var url = urljoin(bank_service_url, '/users/', username, 'bankaccounts', account_number, '/deals');
+    const data = { company: company, sector: sector, extra_info: extra_info_json };
+    return axios.post(url, data,
+        { headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" } })
+        .then(
+            res => {
+                return res.data;
+            },
+            err => {
+                console.log(err);
+                return null;
+            }
+        );
+};

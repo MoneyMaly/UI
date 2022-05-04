@@ -109,7 +109,6 @@ export default function UserProfile() {
 
         const handleSubmitNewBankAccount = () => {
             localStorage.getItem('username')
-            console.log(AddBankDataState)
             add_user_bank_accounts_list(localStorage.getItem('username'), AddBankDataState.owner_name, AddBankDataState.ssn,
                 AddBankDataState.account_number, localStorage.getItem('token'))
                 .then(data => {
