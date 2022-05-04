@@ -243,7 +243,6 @@ export default function ComparatorSortingGrid(props) {
 
         return (
             <div>
-                {/* ('token: ' +  + 'subject: ' + props.data[params.value].subject + ' price: ' + props.data[params.value].price + ' date: ' + props.data[params.value].date + ' id: ' + props.data[params.value].id + ' username: ' +  + ' account_number: ' + props.accountData.account_number + ' owner: ' + props.accountData.owner + ' ssn: ' + props.accountData.ssn)} */}
                 <Button variant="outlined" color="primary" size="small" style={{ marginLeft: 16 }} onClick={handleClickOpen} title={"Deal Information"}>
                     Deal Info
                 </Button>
@@ -293,7 +292,6 @@ export default function ComparatorSortingGrid(props) {
         }
     ];
 
-    //ToDO: add button for set sector, update or insert new one
     //ToDo: Show user deal in my profile page
     //ToDo: Add anomaly - get last 3 month by default
     return (

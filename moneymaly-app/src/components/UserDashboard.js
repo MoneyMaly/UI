@@ -291,11 +291,16 @@ export default function UserDashboard() {
                         native: true,
                     }}
                 >
-                    {months.map((option) => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
+                    {months.map((option) => {
+                        var current_date = new Date;
+                        if (selectedDates.year < current_date.getFullYear() || option.value <= current_date.getMonth() + 1) {
+                            return (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            );
+                        };
+                    })}
                 </TextField>
                 <TextField
                     id="year"
@@ -317,7 +322,7 @@ export default function UserDashboard() {
                     ))}
                 </TextField>
                 <Button autoFocus className={classes.showResultButton} onClick={handelSearchExpensesAndIncome} variant="contained">GO!</Button>
-            </div>
+            </div >
         );
         return (
             <div>
