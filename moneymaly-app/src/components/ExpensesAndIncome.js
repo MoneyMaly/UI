@@ -60,11 +60,6 @@ export default function ComparatorSortingGrid(props) {
     const classes = useStyles();
     const companySectors = ['', 'TV', 'Network', 'Cellular', 'Fitness', 'Car Insurenncae', 'Health Insurenncae'];
     const companySectorsDict = { 'TV': "Number Of Sports Channels", 'Network': "Speed In Mb", 'Cellular': 'Data Package In GB', 'Fitness': 'Number Of Days Per Week', 'Car Insurenncae': 'Driver Age', 'Health Insurenncae': 'Insured Age' };
-    const [selectedRowData, setSelectedRowData] = useState({
-        id: null,
-        sector: "",
-        extra_info: ""
-    });
     const [accountDeals, setAccountDeals] = useState({
         deals: []
     });
@@ -85,6 +80,11 @@ export default function ComparatorSortingGrid(props) {
     };
 
     function DealPopupDialog(props) {
+        const [selectedRowData, setSelectedRowData] = useState({
+            id: null,
+            sector: "",
+            extra_info: ""
+        });
         const [open, setOpen] = React.useState(false);
         const handleClickOpen = () => {
             setOpen(true);
