@@ -3,7 +3,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import { Dialog, DialogTitle } from '@material-ui/core';
 import { Card, CardHeader, Avatar, IconButton, CardMedia, CardActions, CardContent, Button, Container, Grid, makeStyles, MenuItem, Paper, TextField, Typography } from '@material-ui/core';
 import { get_user_data_with_token } from '../adapters/user_service_adapter';
-import { add_user_deal_by_account_number, add_user_bank_accounts_list, get_user_deals_by_account_number } from '../adapters/bank_service_adapter';
+import { add_user_deal_by_account_number, remove_user_deals_by_account_number, get_user_deals_by_account_number } from '../adapters/bank_service_adapter';
 import { NavLink } from 'react-router-dom';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -13,6 +13,7 @@ import DeleteTwoToneIcon from '@material-ui/icons/DeleteTwoTone';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
+import CachedIcon from '@material-ui/icons/Cached';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -119,6 +120,19 @@ export default function ComparatorSortingGrid(props) {
                         });
                 });
         };
+    };
+    const handleSubmitRemoveDeal = () => {
+        setOpen(false);
+        var extra_info_json = {};
+        extra_info_json[companySectorsDict[selectedRowData.sector]] = selectedRowData.extra_info;
+        remove_user_deals_by_account_number(props.accountData.username, localStorage.getItem('token'), props.accountData.account_number, props.subject)
+            .then(result => {
+                get_user_deals_by_account_number(props.accountData.username, localStorage.getItem('token'), props.accountData.account_number)
+                    .then(data => {
+                        setAccountDeals(prevState => ({ ...prevState, deals: data }));
+                    });
+            });
+    };
 
         const extra_info_input_error = (selectedRowData.extra_info === null || selectedRowData.extra_info === '') ? false : isNaN(selectedRowData.extra_info);
         const AddDealDialogContent = () => {
@@ -212,11 +226,11 @@ export default function ComparatorSortingGrid(props) {
                         </Button>
                         <Button onClick={handleSubmitAddDeal} disabled={extra_info_input_error || selectedRowData.extra_info === null || selectedRowData.extra_info === "" || selectedRowData.sector === null || selectedRowData.sector === ""} variant="contained" className={classes.updateButtonPopup}>
                             Update
-                            <AddCircleIcon style={{ paddingLeft: '6px' }} />
+                            <CachedIcon style={{ paddingLeft: '6px' }} />
                         </Button>
-                        <Button onClick={handleSubmitAddDeal} variant="contained" className={classes.deleteButtonPopup}>
+                        <Button onClick={handleSubmitRemoveDeal} variant="contained" className={classes.deleteButtonPopup}>
                             Delete
-                            <AddCircleIcon style={{ paddingLeft: '6px' }} />
+                            <DeleteTwoToneIcon style={{ paddingLeft: '6px' }} />
                         </Button>
                     </DialogActions>
                     </div>
