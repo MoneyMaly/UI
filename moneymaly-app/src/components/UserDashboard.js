@@ -25,12 +25,12 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(2),
         paddingLeft: theme.spacing(10),
         textAlign: 'left',
-        color: theme.palette.info.main
+        color: theme.palette.primary.main
     },
     paper: {
         padding: theme.spacing(1),
         textAlign: 'center',
-        color: theme.palette.info.main
+        color: theme.palette.primary.main
     },
     showResultButton: {
         margin: theme.spacing(1),

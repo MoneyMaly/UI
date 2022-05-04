@@ -43,7 +43,7 @@ export default function ComparatorSortingGrid(props) {
     //ToDo: Add anomaly - get last 3 month by default
     return (
         <div style={{ flex: 1, flexDirection: 'row', textAlign: "center" }}>
-            <DataGrid autoHeight disableSelectionOnClick rowsPerPageOptions={[5, 10, 20, 50, 100]} sortModel={sortModel} rows={props.data} columns={columns} />
+            <DataGrid disableSelectionOnClick autoHeight autoPageSize rowsPerPageOptions={[5, 10, 20, 50, 100]} sortModel={sortModel} rows={props.data} columns={columns} />
         </div>
     );
 }
