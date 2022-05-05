@@ -1,47 +1,43 @@
 import React from 'react';
-import SelectBox from 'devextreme-react/select-box';
-import {
-    Chart,
-    Series,
-    ArgumentAxis,
-    CommonSeriesSettings,
-    Export,
-    Legend,
-    Margin,
-    Title,
-    Subtitle,
-    Tooltip,
-    Grid
-} from 'devextreme-react/chart';
-import service from './data.js';
+import { Chart, Series, ArgumentAxis, CommonSeriesSettings, Export, Legend, Margin, Title, Subtitle, Tooltip, Grid } from 'devextreme-react/chart';
 
-const countriesInfo = service.getCountriesInfo();
-const energySources = service.getEnergySources();
-const types = ['line', 'stackedline', 'fullstackedline'];
+const colors = [
+    '#FF6900',
+    '#00D084',
+    '#9900EF',
+    '#0693E3',
+    '#FF6900',
+    '#F78DA7',
+    '#009688',
+    '#607d8b',
+    '#795548',
+    '#afb42b'
+];
 
 export default class AnomalyChart extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            type: 'line'
+            data: props.data,
+            subjects: props.subjects
         };
         this.handleChange = this.handleChange.bind(this);
-    }
+    };
 
     render() {
         return (
             <React.Fragment>
                 <Chart
                     palette="Violet"
-                    dataSource={countriesInfo}
+                    dataSource={this.state.data}
                 >
                     <CommonSeriesSettings
-                        argumentField="country"
-                        type={this.state.type}
+                        argumentField="date"
+                        type="line"
                     />
                     {
-                        energySources.map(function (item) {
-                            return <Series key={item.value} valueField={item.value} name={item.name} />;
+                        this.state.subjects.map(function (item, index) {
+                            return <Series color={colors[index % 10]} key={index} valueField={item} name={item} />;
                         })
                     }
                     <Margin bottom={20} />
@@ -57,22 +53,11 @@ export default class AnomalyChart extends React.Component {
                         itemTextPosition="bottom"
                     />
                     <Export enabled={true} />
-                    <Title text="Energy Consumption in 2004">
-                        <Subtitle text="(Millions of Tons, Oil Equivalent)" />
+                    <Title text="Anomaly Expens Payments Detector">
+                        <Subtitle text="(2022 - 2022 : April - June)" />
                     </Title>
                     <Tooltip enabled={true} />
                 </Chart>
-                <div className="options">
-                    <div className="caption">Options</div>
-                    <div className="option">
-                        <span>Series Type </span>
-                        <SelectBox
-                            dataSource={types}
-                            value={this.state.type}
-                            onValueChanged={this.handleChange}
-                        />
-                    </div>
-                </div>
             </React.Fragment>
         );
     }

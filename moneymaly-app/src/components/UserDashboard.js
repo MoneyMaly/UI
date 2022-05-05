@@ -12,8 +12,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import ComparatorSortingGrid from './ExpensesAndIncome';
 import moment from "moment";
-import AnomalyChart from './AnomalyDisplay';
-import { result } from 'lodash';
+import AnomalyChartTest from './AnomalyCharts';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,6 +44,10 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
         marginLeft: theme.spacing(1)
     },
+    anomalyChart: {
+        marginRight: theme.spacing(8),
+        marginTop: theme.spacing(4)
+    },    
     paperAccounts: {
         padding: theme.spacing(10),
         paddingBottom: theme.spacing(4),
@@ -111,8 +114,8 @@ export default function UserDashboard() {
                     var subject = item.sector + " - " + item.company;
                     subjects.push(subject);
                     item.payments.map((payment, index) => {
-                        var object = { 'date': moment(payment.date).format("DD-MM-YYYY") };
-                        object[subject] = payment.price;
+                        var object = { 'date': moment(payment.date).toDate() };
+                        object[subject] = payment.price + " $";
                         result.push(object);
                     })
                 });
@@ -378,8 +381,8 @@ export default function UserDashboard() {
                         <h3>No Data Avialabe for this date</h3>
                     </div>
                 ) :
-                    (<div>
-                        <AnomalyChart subjects={userBankAccountAnomaly.anomalySubjects} data={userBankAccountAnomaly.selectedBankAccountAnomaly} />
+                (<div className={classes.anomalyChart}>
+                        <AnomalyChartTest subjects={userBankAccountAnomaly.anomalySubjects} data={userBankAccountAnomaly.selectedBankAccountAnomaly} />
                     </div>
                     )
             );
