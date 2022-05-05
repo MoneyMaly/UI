@@ -12,6 +12,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import ComparatorSortingGrid from './ExpensesAndIncome';
 import moment from "moment";
+import AnomalyChart from './AnomalyDisplay';
+import { result } from 'lodash';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -78,7 +80,8 @@ export default function UserDashboard() {
         selectedBankAccountBalance: []
     });
     const [userBankAccountAnomaly, setUserBankAccountAnomaly] = useState({
-        selectedBankAccountAnomaly: []
+        selectedBankAccountAnomaly: [],
+        anomalySubjects: []
     });   
     const [selectedDates, setSelectedDates] = useState({
         month: 6,
@@ -102,8 +105,18 @@ export default function UserDashboard() {
             userBankAccounts.selectedAccountData.account_number, selectedAnomalyDates.from_year, selectedAnomalyDates.to_year,
             selectedAnomalyDates.from_month, selectedAnomalyDates.to_month)
             .then(data => {
-                setUserBankAccountAnomaly(prevState => ({ ...prevState, selectedBankAccountAnomaly: data }));
-                console.log(data);
+                var result = [];
+                var subjects = [];
+                data.map((item, index) => {
+                    var subject = item.sector + " - " + item.company;
+                    subjects.push(subject);
+                    item.payments.map((payment, index) => {
+                        var object = { 'date': moment(payment.date).format("DD-MM-YYYY") };
+                        object[subject] = payment.price;
+                        result.push(object);
+                    })
+                });
+                setUserBankAccountAnomaly(prevState => ({ ...prevState, selectedBankAccountAnomaly: result, anomalySubjects: subjects }));
             });
     };
 
@@ -366,21 +379,7 @@ export default function UserDashboard() {
                     </div>
                 ) :
                     (<div>
-                        {userBankAccountAnomaly.selectedBankAccountAnomaly.map((item, index) => {
-                            return (
-                                <div key={index}>
-                                    <h4 id={index}>company: {item.company}, sector: {item.sector}</h4>
-                                    {item.payments.map((payment, i) => {
-                                        return (
-                                            <div key={i}>
-                                                <h5>Date: {moment(payment.date).format("DD-MM-YYYY")}, Price: {payment.price}$</h5>
-                                            </div>
-                                        );
-                                    })}
-                                    <br />
-                                </div>
-                            );
-                        })}
+                        <AnomalyChart subjects={userBankAccountAnomaly.anomalySubjects} data={userBankAccountAnomaly.selectedBankAccountAnomaly} />
                     </div>
                     )
             );
