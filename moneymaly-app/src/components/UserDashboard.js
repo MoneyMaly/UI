@@ -6,6 +6,7 @@ import { NavLink, Redirect } from 'react-router-dom';
 import { get_user_bank_accounts_list, get_user_monthly_balance, get_account_monthly_balance } from '../adapters/bank_service_adapter';
 import { get_user_data_with_token } from '../adapters/user_service_adapter';
 import { get_account_anomaly_by_date } from '../adapters/business_service_adapter';
+import Alert from '@material-ui/lab/Alert';
 import clsx from 'clsx';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -119,6 +120,7 @@ export default function UserDashboard() {
                         result.push(object);
                     })
                 });
+                result.sort((a, b) => b.date - a.date);
                 setUserBankAccountAnomaly(prevState => ({ ...prevState, selectedBankAccountAnomaly: result, anomalySubjects: subjects }));
             });
     };
@@ -376,15 +378,16 @@ export default function UserDashboard() {
 
         function AnomalyDataObjects() {
             return (
-                userBankAccountAnomaly.selectedBankAccountAnomaly.length === 0 ? (
-                    <div>
-                        <h3>No Data Avialabe for this date</h3>
-                    </div>
-                ) :
-                (<div className={classes.anomalyChart}>
-                        <AnomalyChartTest subjects={userBankAccountAnomaly.anomalySubjects} data={userBankAccountAnomaly.selectedBankAccountAnomaly} />
-                    </div>
-                    )
+                <div className={classes.anomalyChart}>
+                    {(userBankAccountAnomaly.anomalySubjects.length > 0) ?
+                        (
+                            <div>
+                                <Alert severity="warning"><b>Warning</b> - {userBankAccountAnomaly.anomalySubjects.length} Anomalies Detected For Selected Dates</Alert>
+                                <AnomalyChartTest subjects={userBankAccountAnomaly.anomalySubjects} data={userBankAccountAnomaly.selectedBankAccountAnomaly} />
+                            </div>
+                        ) :
+                        (<Alert severity="success">No Anomalies Detected For Selected Dates</Alert>)}
+                </div>
             );
         };
 
@@ -534,14 +537,14 @@ export default function UserDashboard() {
                     </Grid>
                     <Grid item xs={12}>
                         <Paper className={classes.expensesAndIncomePaper}>
-                            <h1>Expenses & Income</h1>
-                            <DisplayExpensesAndIncome />
+                        <h1>Anomaly Dedector</h1>
+                            <DisplayAnomalyGraphs />
                         </Paper>
                     </Grid>
                     <Grid item xs={12}>
                         <Paper className={classes.expensesAndIncomePaper}>
-                            <h1>Anomaly Dedector</h1>
-                            <DisplayAnomalyGraphs />
+                        <h1>Expenses & Income</h1>
+                            <DisplayExpensesAndIncome />
                         </Paper>
                     </Grid>                   
                 </Grid>
