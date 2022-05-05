@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { NavLink, Redirect } from 'react-router-dom';
 import { get_user_bank_accounts_list, get_user_monthly_balance, get_account_monthly_balance } from '../adapters/bank_service_adapter';
 import { get_user_data_with_token } from '../adapters/user_service_adapter';
+import { get_account_anomaly_by_date } from '../adapters/business_service_adapter';
 import clsx from 'clsx';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -37,6 +38,10 @@ const useStyles = makeStyles((theme) => ({
             backgroundColor: theme.palette.success.light,
             color: '#fff'
         },
+    },
+    closeResultButton: {
+        margin: theme.spacing(1),
+        marginLeft: theme.spacing(1)
     },
     paperAccounts: {
         padding: theme.spacing(10),
@@ -72,18 +77,19 @@ export default function UserDashboard() {
         bankAccountsBalance: [],
         selectedBankAccountBalance: []
     });
+    const [userBankAccountAnomaly, setUserBankAccountAnomaly] = useState({
+        selectedBankAccountAnomaly: []
+    });   
     const [selectedDates, setSelectedDates] = useState({
         month: 6,
         year: 2022
     });
-
-    function get_user_accounts_balance(month, year) {
-        get_user_monthly_balance(localStorage.getItem('username'), localStorage.getItem('token'), month, year)
-            .then(data => {
-                setUserAccountBalances(prevState => ({ ...prevState, bankAccountsBalance: data }));
-            });
-    };
-
+    const [selectedAnomalyDates, setSelectedAnomalyDates] = useState({
+        from_year: 2022,
+        to_year: 2022,
+        from_month: 4,
+        to_month: 6
+    });
     function get_bank_account_balance(month, year) {
         get_account_monthly_balance(localStorage.getItem('username'), localStorage.getItem('token'),
             userBankAccounts.selectedAccountData.account_number, userBankAccounts.selectedAccountData.ssn, userBankAccounts.selectedAccountData.owner, month, year)
@@ -91,6 +97,16 @@ export default function UserDashboard() {
                 setUserAccountBalances(prevState => ({ ...prevState, selectedBankAccountBalance: data }));
             });
     };
+    function get_bank_account_anomaly_by_date() {
+        get_account_anomaly_by_date(localStorage.getItem('username'), localStorage.getItem('token'),
+            userBankAccounts.selectedAccountData.account_number, selectedAnomalyDates.from_year, selectedAnomalyDates.to_year,
+            selectedAnomalyDates.from_month, selectedAnomalyDates.to_month)
+            .then(data => {
+                setUserBankAccountAnomaly(prevState => ({ ...prevState, selectedBankAccountAnomaly: data }));
+                console.log(data);
+            });
+    };
+
     useEffect(() => {
         if (localStorage.getItem("token") && localStorage.getItem('username')) {
             get_user_data_with_token(localStorage.getItem('username'), localStorage.getItem('token'))
@@ -201,6 +217,58 @@ export default function UserDashboard() {
             </Card>
         );
     };
+    const months = [
+        {
+            value: '1',
+            label: 'January'
+        },
+        {
+            value: '2',
+            label: 'February'
+        },
+        {
+            value: '3',
+            label: 'March'
+        },
+        {
+            value: '4',
+            label: 'April'
+        },
+        {
+            value: '5',
+            label: 'May'
+        },
+        {
+            value: '6',
+            label: 'June'
+        },
+        {
+            value: '7',
+            label: 'July'
+        },
+        {
+            value: '8',
+            label: 'August'
+        },
+        {
+            value: '9',
+            label: 'September'
+        },
+        {
+            value: '10',
+            label: 'October',
+        },
+        {
+            value: '11',
+            label: 'November'
+        },
+        {
+            value: '12',
+            label: 'December'
+        }
+    ];
+    const years = Array.apply(null, Array(7)).map(function (_, i) { return { 'value': i + 2015, 'label': i + 2015 }; })    
+    
     function DisplayExpensesAndIncome() {
         const handleDateChange = (e) => {
             const { id, value } = e.target
@@ -225,59 +293,28 @@ export default function UserDashboard() {
                     )
             );
         };
-        const months = [
-            {
-                value: '1',
-                label: 'January'
-            },
-            {
-                value: '2',
-                label: 'February'
-            },
-            {
-                value: '3',
-                label: 'March'
-            },
-            {
-                value: '4',
-                label: 'April'
-            },
-            {
-                value: '5',
-                label: 'May'
-            },
-            {
-                value: '6',
-                label: 'June'
-            },
-            {
-                value: '7',
-                label: 'July'
-            },
-            {
-                value: '8',
-                label: 'August'
-            },
-            {
-                value: '9',
-                label: 'September'
-            },
-            {
-                value: '10',
-                label: 'October',
-            },
-            {
-                value: '11',
-                label: 'November'
-            },
-            {
-                value: '12',
-                label: 'December'
-            }
-        ];
-        const years = Array.apply(null, Array(7)).map(function (_, i) { return { 'value': i + 2015, 'label': i + 2015 }; })
+        
         const monthAndYearListTextField = (
             <div>
+                <TextField
+                    id="year"
+                    name="year"
+                    select
+                    label="Year"
+                    value={selectedDates.year}
+                    helperText="Please select Year"
+                    variant="outlined"
+                    onChange={handleDateChange}
+                    SelectProps={{
+                        native: true,
+                    }}
+                >
+                    {years.map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </TextField>               
                 <TextField
                     id="month"
                     name="month"
@@ -302,15 +339,64 @@ export default function UserDashboard() {
                         };
                     })}
                 </TextField>
+                <Button className={classes.showResultButton} onClick={handelSearchExpensesAndIncome} variant="contained">GO!</Button>
+                <Button className={classes.closeResultButton} disabled={userAccountBalances.selectedBankAccountBalance.length === 0}
+                    onClick={() => setUserAccountBalances(prevState => ({ ...prevState, selectedBankAccountBalance: [] }))} variant="contained">Close</Button>
+            </div>
+        );
+        return (
+            <div>
+                {monthAndYearListTextField}
+                {ExpensesAndIncomeObjects()}
+            </div>
+        );
+    };
+
+    function DisplayAnomalyGraphs() {
+        const handleAnomalyDateChange = (e) => {
+            const { id, value } = e.target
+            setSelectedAnomalyDates(prevState => ({ ...prevState, [id]: value }));
+        };
+
+        function AnomalyDataObjects() {
+            return (
+                userBankAccountAnomaly.selectedBankAccountAnomaly.length === 0 ? (
+                    <div>
+                        <h3>No Data Avialabe for this date</h3>
+                    </div>
+                ) :
+                    (<div>
+                        {userBankAccountAnomaly.selectedBankAccountAnomaly.map((item, index) => {
+                            return (
+                                <div key={index}>
+                                    <h4 id={index}>company: {item.company}, sector: {item.sector}</h4>
+                                    {item.payments.map((payment, i) => {
+                                        return (
+                                            <div key={i}>
+                                                <h5>Date: {moment(payment.date).format("DD-MM-YYYY")}, Price: {payment.price}$</h5>
+                                            </div>
+                                        );
+                                    })}
+                                    <br />
+                                </div>
+                            );
+                        })}
+                    </div>
+                    )
+            );
+        };
+
+        const monthAndYearListTextField = (
+            <div>          
                 <TextField
-                    id="year"
-                    name="year"
+                    id="from_year"
+                    name="from_year"
                     select
-                    label="Year"
-                    value={selectedDates.year}
-                    helperText="Please select Year"
+                    label="From Year"
+                    value={selectedAnomalyDates.from_year}
+                    helperText="Select From Year"
                     variant="outlined"
-                    onChange={handleDateChange}
+                    onChange={handleAnomalyDateChange}
                     SelectProps={{
                         native: true,
                     }}
@@ -320,14 +406,84 @@ export default function UserDashboard() {
                             {option.label}
                         </option>
                     ))}
+                </TextField>-
+                <TextField
+                    id="to_year"
+                    name="to_year"
+                    select
+                    label="To Year"
+                    value={selectedAnomalyDates.to_year}
+                    helperText="Select To Year"
+                    variant="outlined"
+                    onChange={handleAnomalyDateChange}
+                    SelectProps={{
+                        native: true,
+                    }}
+                >
+                    {years.map((option) => {
+                        if (option.value >= selectedAnomalyDates.from_year) {
+                            return (<option key={option.value} value={option.value}>{option.label}</option>);
+                        }
+                    })}
                 </TextField>
-                <Button autoFocus className={classes.showResultButton} onClick={handelSearchExpensesAndIncome} variant="contained">GO!</Button>
-            </div >
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <TextField
+                    id="from_month"
+                    name="from_month"
+                    select
+                    label="From Month"
+                    value={selectedAnomalyDates.from_month}
+                    helperText="Select From Month"
+                    variant="outlined"
+                    onChange={handleAnomalyDateChange}
+                    SelectProps={{
+                        native: true,
+                    }}
+                >
+                    {months.map((option) => {
+                        var current_date = new Date;
+                        if (selectedAnomalyDates.from_year < current_date.getFullYear() || option.value <= current_date.getMonth() + 1) {
+                            return (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            );
+                        };
+                    })}
+                </TextField>-
+                <TextField
+                    id="to_month"
+                    name="to_month"
+                    select
+                    label="To Month"
+                    value={selectedAnomalyDates.to_month}
+                    helperText="Select To Month"
+                    variant="outlined"
+                    onChange={handleAnomalyDateChange}
+                    SelectProps={{
+                        native: true,
+                    }}
+                >
+                    {months.map((option) => {
+                        var current_date = new Date;
+                        if (selectedAnomalyDates.to_year < current_date.getFullYear() || option.value <= current_date.getMonth() + 1) {
+                            return (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            );
+                        };
+                    })}                    
+                </TextField>
+                <Button className={classes.showResultButton} onClick={get_bank_account_anomaly_by_date} variant="contained">GO!</Button>
+                <Button className={classes.closeResultButton} disabled={userBankAccountAnomaly.selectedBankAccountAnomaly.length === 0}
+                    onClick={() => setUserBankAccountAnomaly(prevState => ({ ...prevState, selectedBankAccountAnomaly: [] }))} variant="contained">Close</Button>
+            </div>
         );
         return (
             <div>
                 {monthAndYearListTextField}
-                {ExpensesAndIncomeObjects()}
+                {AnomalyDataObjects()}
             </div>
         );
     };
@@ -380,6 +536,12 @@ export default function UserDashboard() {
                             <DisplayExpensesAndIncome />
                         </Paper>
                     </Grid>
+                    <Grid item xs={12}>
+                        <Paper className={classes.expensesAndIncomePaper}>
+                            <h1>Anomaly Dedector</h1>
+                            <DisplayAnomalyGraphs />
+                        </Paper>
+                    </Grid>                   
                 </Grid>
             </div>
         ) :

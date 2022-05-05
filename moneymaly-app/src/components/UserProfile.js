@@ -251,8 +251,8 @@ export default function UserProfile() {
 
     function DisplayBankAccount(bank_account) {
         return (
-            <Card className={classes.accountCardData}>
-                <CardHeader
+            <Card key={bank_account.account_number} className={classes.accountCardData}>
+            <CardHeader
                     avatar={
                         <AccountBalanceIcon style={{ paddingRight: '6px' }} />
                     }
@@ -265,10 +265,10 @@ export default function UserProfile() {
                         <b>ssn: {bank_account.ssn}</b><br />
                         <b>Username: {bank_account.username}</b>
                     </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p" >
-                        <IconButton className={clsx(classes.expand, { [classes.expandOpen]: expanded })}>
+                    <Typography variant="body2" color="textSecondary" component={'span'}>
+                        <div className={clsx(classes.expand, { [classes.expandOpen]: expanded })}>
                             <DraggableRemoveBankAccountDialog account_number={bank_account.account_number} />
-                        </IconButton>
+                        </div>
                     </Typography>
                 </CardContent>
             </Card>
@@ -288,8 +288,7 @@ export default function UserProfile() {
         return (
             <div>
                 <h1>Bank Accounts</h1>
-                {bank_account_list.account_list.map((account) =>
-                    DisplayBankAccount(account))}
+                {bank_account_list.account_list.map((account) => DisplayBankAccount(account))}
                 <DraggableAddBankAccountDialog classes={classes} />
             </div>
         );

@@ -292,7 +292,6 @@ export default function ComparatorSortingGrid(props) {
         }
     ];
 
-    //ToDo: Show user deal in my profile page
     //ToDo: Add anomaly - get last 3 month by default
     return (
         <div style={{ flex: 1, flexDirection: 'row', textAlign: "center", marginRight: "5%" }}>
