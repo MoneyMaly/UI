@@ -260,7 +260,7 @@ export default function ComparatorSortingGrid(props) {
                 </Dialog>
             </div>
         );
-    };
+//};
 
     const columns = [
         { field: 'subject', headerName: "Company", width: 140 },

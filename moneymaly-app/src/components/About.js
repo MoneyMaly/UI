@@ -55,7 +55,7 @@ const AboutText = ["We provide a world-class platform to over 200 million users 
 export default function About() {
     const classes = useStyles();
     const moneyImage = window.innerWidth >= 650 ? desktopImage : mobileImage;
-        <div className={classes.root}>
+    return ( <div className={classes.root}>
             <Typography className={classes.title} variant='h4' noWrap >
             About Us
             </Typography>
