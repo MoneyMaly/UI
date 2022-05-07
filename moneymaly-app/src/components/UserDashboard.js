@@ -81,11 +81,13 @@ export default function UserDashboard() {
     });
     const [userAccountBalances, setUserAccountBalances] = useState({
         bankAccountsBalance: [],
-        selectedBankAccountBalance: []
+        selectedBankAccountBalance: [],
+        chartOpen: false
     });
     const [userBankAccountAnomaly, setUserBankAccountAnomaly] = useState({
         selectedBankAccountAnomaly: [],
-        anomalySubjects: []
+        anomalySubjects: [],
+        chartOpen: false
     });   
     const [selectedDates, setSelectedDates] = useState({
         month: 6,
@@ -101,7 +103,7 @@ export default function UserDashboard() {
         get_account_monthly_balance(localStorage.getItem('username'), localStorage.getItem('token'),
             userBankAccounts.selectedAccountData.account_number, userBankAccounts.selectedAccountData.ssn, userBankAccounts.selectedAccountData.owner, month, year)
             .then(data => {
-                setUserAccountBalances(prevState => ({ ...prevState, selectedBankAccountBalance: data }));
+                setUserAccountBalances(prevState => ({ ...prevState, selectedBankAccountBalance: data, chartOpen: true }));
             });
     };
     function get_bank_account_anomaly_by_date() {
@@ -121,7 +123,7 @@ export default function UserDashboard() {
                     })
                 });
                 result.sort((a, b) => b.date - a.date);
-                setUserBankAccountAnomaly(prevState => ({ ...prevState, selectedBankAccountAnomaly: result, anomalySubjects: subjects }));
+                setUserBankAccountAnomaly(prevState => ({ ...prevState, selectedBankAccountAnomaly: result, anomalySubjects: subjects, chartOpen: true }));
             });
     };
 
@@ -299,16 +301,22 @@ export default function UserDashboard() {
 
         function ExpensesAndIncomeObjects() {
             return (
-                userAccountBalances.selectedBankAccountBalance.length === 0 ? (
+                !userAccountBalances.chartOpen ? (
                     <div>
-                        <h3>No Data Avialabe for this date</h3>
+                        <br />
                     </div>
-                ) :
-                    (<div>
-                        <ComparatorSortingGrid accountData={userBankAccounts.selectedAccountData} data={userAccountBalances.selectedBankAccountBalance.map((item, index) =>
-                            ({ price: item.price, subject: item.subject, date: moment(item.date).format("DD-MM-YYYY"), id: index }))} />
-                    </div>
-                    )
+                ) : (
+                    userAccountBalances.selectedBankAccountBalance.length === 0 ? (
+                        <div>
+                            <Alert severity="warning">No Data Avialabe for this date</Alert>
+                        </div>
+                    ) :
+                        (<div>
+                            <Alert severity="success">{userAccountBalances.selectedBankAccountBalance.length} Expenses And Income Detected For Selected Dates</Alert><br />
+                            <ComparatorSortingGrid accountData={userBankAccounts.selectedAccountData} data={userAccountBalances.selectedBankAccountBalance.map((item, index) =>
+                                ({ price: item.price, subject: item.subject, date: moment(item.date).format("DD-MM-YYYY"), id: index }))} />
+                        </div>
+                        ))
             );
         };
         
@@ -358,8 +366,8 @@ export default function UserDashboard() {
                     })}
                 </TextField>
                 <Button className={classes.showResultButton} onClick={handelSearchExpensesAndIncome} variant="contained">GO!</Button>
-                <Button className={classes.closeResultButton} disabled={userAccountBalances.selectedBankAccountBalance.length === 0}
-                    onClick={() => setUserAccountBalances(prevState => ({ ...prevState, selectedBankAccountBalance: [] }))} variant="contained">Close</Button>
+                <Button className={classes.closeResultButton} disabled={!userAccountBalances.chartOpen}
+                    onClick={() => setUserAccountBalances(prevState => ({ ...prevState, chartOpen: false }))} variant="contained">Close</Button>
             </div>
         );
         return (
@@ -378,16 +386,23 @@ export default function UserDashboard() {
 
         function AnomalyDataObjects() {
             return (
-                <div className={classes.anomalyChart}>
-                    {(userBankAccountAnomaly.anomalySubjects.length > 0) ?
-                        (
-                            <div>
-                                <Alert severity="warning"><b>Warning</b> - {userBankAccountAnomaly.anomalySubjects.length} Anomalies Detected For Selected Dates</Alert>
-                                <AnomalyChartTest subjects={userBankAccountAnomaly.anomalySubjects} data={userBankAccountAnomaly.selectedBankAccountAnomaly} />
-                            </div>
-                        ) :
-                        (<Alert severity="success">No Anomalies Detected For Selected Dates</Alert>)}
-                </div>
+                !userBankAccountAnomaly.chartOpen ? (
+                    <div>
+                        <h3><br /></h3>
+                    </div>
+                ) :
+                    (
+                        <div className={classes.anomalyChart}>
+                            {(userBankAccountAnomaly.anomalySubjects.length > 0) ?
+                                (
+                                    <div>
+                                        <Alert severity="warning"><b>Warning</b> - {userBankAccountAnomaly.anomalySubjects.length} Anomalies Detected For Selected Dates</Alert>
+                                        <AnomalyChartTest subjects={userBankAccountAnomaly.anomalySubjects} data={userBankAccountAnomaly.selectedBankAccountAnomaly} />
+                                    </div>
+                                ) :
+                                (<Alert severity="success">No Anomalies Detected For Selected Dates</Alert>)}
+                        </div>
+                    )                
             );
         };
 
@@ -481,8 +496,8 @@ export default function UserDashboard() {
                     })}                    
                 </TextField>
                 <Button className={classes.showResultButton} onClick={get_bank_account_anomaly_by_date} variant="contained">GO!</Button>
-                <Button className={classes.closeResultButton} disabled={userBankAccountAnomaly.selectedBankAccountAnomaly.length === 0}
-                    onClick={() => setUserBankAccountAnomaly(prevState => ({ ...prevState, selectedBankAccountAnomaly: [] }))} variant="contained">Close</Button>
+                <Button className={classes.closeResultButton} disabled={!userBankAccountAnomaly.chartOpen}
+                    onClick={() => setUserBankAccountAnomaly(prevState => ({ ...prevState, chartOpen: false }))} variant="contained">Close</Button>
             </div>
         );
         return (
