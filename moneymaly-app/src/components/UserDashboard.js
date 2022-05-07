@@ -7,7 +7,7 @@ import { get_user_bank_accounts_list, get_user_monthly_balance, get_account_mont
 import { get_user_data_with_token } from '../adapters/user_service_adapter';
 import { get_account_anomaly_by_date } from '../adapters/business_service_adapter';
 import Alert from '@material-ui/lab/Alert';
-import clsx from 'clsx';
+import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
@@ -559,7 +559,7 @@ export default function UserDashboard() {
                     </Grid>
                     <Grid item xs={12}>
                         <Paper className={classes.expensesAndIncomePaper}>
-                        <h1>Expenses & Income</h1>
+                            <h1><SwapHorizIcon fontSize="medium" /> Expenses & Income</h1>
                             <DisplayExpensesAndIncome />
                         </Paper>
                     </Grid>                   
