@@ -157,7 +157,8 @@ export default function UserDashboard() {
         const handleAccountChange = (event) => {
             var selectedAccountData = filter(userBankAccounts.account_list, { 'account_number': event.target.value })[0]
             setUserBankAccounts(prevState => ({ ...prevState, selectedAccount: event.target.value, selectedAccountData: selectedAccountData }));
-            setUserAccountBalances(prevState => ({ ...prevState, selectedBankAccountBalance: [] }));
+            setUserAccountBalances(prevState => ({ ...prevState, selectedBankAccountBalance: [], chartOpen: false }));
+            setUserBankAccountAnomaly(prevState => ({ ...prevState, chartOpen: false }));
         };
 
         return (

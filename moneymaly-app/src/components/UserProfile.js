@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     },
     accountCardData: {
         padding: theme.spacing(1),
-        paddingBottom: theme.spacing(2),
+        paddingBottom: theme.spacing(3),
         marginBottom: "5%",
         textAlign: 'left'
     },
@@ -308,10 +308,10 @@ export default function UserProfile() {
                         />
                         <CardContent>
                             <Typography variant="body2" color="textSecondary" component="p">
-                                Hello {data.full_name}, your Email address is:  <b>{data.email}</b>
+                                Email:  <b>{data.email}</b>
                             </Typography>
                             <Typography variant="body2" color="textSecondary" component="p">
-                                Your Phone number is:  <b>{data.phone}</b>
+                                Phone:  <b>{data.phone}</b>
                             </Typography>
                         </CardContent>
                     </Card>

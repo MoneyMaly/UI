@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { fade, makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -22,6 +22,13 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
 import AssessmentIcon from '@material-ui/icons/Assessment';
+import clsx from 'clsx';
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ListItem from '@material-ui/core/ListItem';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -108,6 +115,67 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const drawerWidth = 240;
+
+const useStylesNew = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+    },
+    appBar: {
+        background: '#209CEE',
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+    appBarShift: {
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: drawerWidth,
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+    menuButton: {
+        marginRight: theme.spacing(2),
+    },
+    hide: {
+        display: 'none',
+    },
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+    },
+    drawerPaper: {
+        background: '#F0F8FF',
+        width: drawerWidth,
+    },
+    drawerHeader: {
+        display: 'flex',
+        alignItems: 'center',
+        padding: theme.spacing(0, 1),
+        // necessary for content to be below app bar
+        ...theme.mixins.toolbar,
+        justifyContent: 'flex-end',
+    },
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        marginLeft: -drawerWidth,
+    },
+    contentShift: {
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginLeft: 0,
+    },
+}));
+
 function ScrollTop(props) {
     const { children, window } = props;
     const classes = useStyles();
@@ -141,6 +209,20 @@ export default function PrimarySearchAppBar(props) {
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+    // New App Bar
+    const classesNew = useStylesNew();
+    const theme = useTheme();
+    const [open, setOpen] = React.useState(false);
+
+    const handleDrawerOpen = () => {
+        setOpen(true);
+    };
+
+    const handleDrawerClose = () => {
+        setOpen(false);
+    };
+
 
     const handleMenuClose = () => {
         setAnchorEl(null);
@@ -225,33 +307,17 @@ export default function PrimarySearchAppBar(props) {
 
     return (
         <div className={classes.grow}>
-            <AppBar className={classes.appBar} >
+            <AppBar position="static" className={clsx(classesNew.appBar, { [classesNew.appBarShift]: open, })}  >
                 <Toolbar id="back-to-top-anchor">
-                    <Tooltip title="Menu" arrow>
-                        <IconButton
-                            edge="start"
-                            className={classes.menuButton}
-                            color="inherit"
-                            aria-label="open drawer"
-                            onClick={handleMenu}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose} >
-                    <MenuItem component={Link} to={'/'}>
-                        <IconButton color="inherit"><HomeIcon /></IconButton>
-                                Home
-                        </MenuItem>
-                        <MenuItem component={Link} to={'/About'}>
-                            <IconButton color="inherit"><InfoIcon /></IconButton>
-                                About
-                        </MenuItem>
-                        <MenuItem component={Link} to={'/Contact'}>
-                            <IconButton color="inherit"><MailIcon /></IconButton>
-                            Contact Us
-                        </MenuItem>   
-                    </Menu>
+                <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={handleDrawerOpen}
+                        edge="start"
+                        className={clsx(classesNew.menuButton, open && classesNew.hide)}
+                    >
+                        <MenuIcon />
+                    </IconButton>                    
                     <Typography className={classes.title} variant="h6" noWrap>
                         MoneyMaly
                     </Typography>
@@ -306,6 +372,49 @@ export default function PrimarySearchAppBar(props) {
                     </div>
                 </Toolbar>
             </AppBar>
+            <Drawer
+                className={classesNew.drawer}
+                variant="persistent"
+                anchor="left"
+                open={open}
+                classes={{
+                    paper: classesNew.drawerPaper,
+                }}
+            >
+                <div className={classesNew.drawerHeader}>
+                    <IconButton onClick={handleDrawerClose}>
+                        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                    </IconButton>
+                </div>
+                <Divider />
+                <List>
+                    <ListItem button component={Link} to={'/'} onClick={handleDrawerClose}>
+                        <IconButton color="inherit"><HomeIcon /></IconButton>
+                        Home
+                    </ListItem>
+                    <ListItem button component={Link} to={'/UserDashboard'} onClick={handleDrawerClose}>
+                        <IconButton color="inherit"><AssessmentIcon /></IconButton>
+                        Dashboard
+                    </ListItem>
+                    <ListItem button component={Link} to={'/UserProfile'} onClick={handleDrawerClose}>
+                        <IconButton color="inherit"><AccountCircle /></IconButton>
+                        My Profile
+                    </ListItem>
+                </List>
+                <Divider />
+                <List>
+                    <ListItem button component={Link} to={'/About'} onClick={handleDrawerClose}>
+                        <IconButton color="inherit"><InfoIcon /></IconButton>
+                        About
+                    </ListItem>
+                    <ListItem button component={Link} to={'/Contact'} onClick={handleDrawerClose}>
+                        <IconButton color="inherit"><MailIcon /></IconButton>
+                        Contact Us
+                    </ListItem>
+                </List>
+                <Divider />
+            </Drawer>
+            
             <ScrollTop {...props}>
                 <Fab className={classes.scrollUpFab} size="small" aria-label="scroll back to top">
                     <KeyboardArrowUpIcon />
