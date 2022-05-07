@@ -206,10 +206,10 @@ export default function UserDashboard() {
                 />
                 <CardContent>
                     <Typography variant="body2" color="textSecondary" component="p">
-                        This Bank Account own by <b>{userBankAccounts.selectedAccountData.owner}</b>, <b> ssn: {userBankAccounts.selectedAccountData.ssn}</b>
+                    <b> ssn: {userBankAccounts.selectedAccountData.ssn}</b>
                     </Typography>
                 </CardContent>
-                <CardActions disableSpacing>
+                {/*CardActions disableSpacing>
                     <IconButton
                         className={clsx(classes.expand, {
                             [classes.expandOpen]: expanded,
@@ -234,7 +234,7 @@ export default function UserDashboard() {
                             Set aside off of the heat to let rest for 10 minutes, and then serve.
                             </Typography>
                     </CardContent>
-                </Collapse>
+                    </Collapse*/}
             </Card>
         );
     };
@@ -525,9 +525,9 @@ export default function UserDashboard() {
     const renderUserNotLoggedIn = (
         <Container component="main" maxWidth="xs">
             <h4 className="center">Home</h4>
-            <h5 className="center">you are not logged in !</h5>
+            <h5 className="center">You are not logged in!</h5>
             <h5 className="center">Please Login First <NavLink to="/Login">Login</NavLink></h5>
-            <Redirect to="/" />
+            <Redirect to="/Login" />
         </Container>
     );
    
@@ -542,7 +542,7 @@ export default function UserDashboard() {
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <Paper className={classes.paperAccounts} elevation={0}>
-                            <h2>Your Bank Accounts</h2>
+                            <h2>Bank Accounts</h2>
                             {renderSelectBankAccount()}
                         </Paper>
                     </Grid>

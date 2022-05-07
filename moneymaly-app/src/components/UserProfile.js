@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Avatar, Button, Container, Grid, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
 import { get_user_data_with_token } from '../adapters/user_service_adapter';
 import { get_user_bank_accounts_list, delete_user_bank_accounts_list, add_user_bank_accounts_list } from '../adapters/bank_service_adapter';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Redirect } from 'react-router-dom';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -350,6 +350,7 @@ export default function UserProfile() {
             <h4 className="center">Home</h4>
             <h5 className="center">You are not logged in !</h5>
             <h5 className="center">Please Login First <NavLink to="/Login">Login</NavLink></h5>
+            <Redirect to="/Login" />        
         </Container>
     );
 

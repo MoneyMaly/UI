@@ -344,13 +344,6 @@ export default function PrimarySearchAppBar(props) {
                                 </Link>
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="Dashboard" arrow>
-                            <IconButton color="inherit">
-                                <Link to="/UserDashboard" style={{ color: 'inherit', textDecoration: 'inherit' }}>
-                                    <AssessmentIcon />
-                                </Link>
-                            </IconButton>
-                        </Tooltip>
                         <Tooltip title="Logout" arrow>
                             <IconButton color="inherit">
                             <Link to="/Logout" style={{ color: 'inherit', textDecoration: 'inherit' }}>
@@ -413,8 +406,14 @@ export default function PrimarySearchAppBar(props) {
                     </ListItem>
                 </List>
                 <Divider />
+                <List>
+                    <ListItem button component={Link} to={'/Logout'} onClick={handleDrawerClose}>
+                        <IconButton color="inherit"><ExitToAppIcon /></IconButton>
+                        Logout
+                    </ListItem>
+                </List>
+                <Divider />
             </Drawer>
-            
             <ScrollTop {...props}>
                 <Fab className={classes.scrollUpFab} size="small" aria-label="scroll back to top">
                     <KeyboardArrowUpIcon />
