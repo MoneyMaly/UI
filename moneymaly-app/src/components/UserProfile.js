@@ -31,7 +31,8 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.primary.main
     },
     accountCardData: {
-        padding: theme.spacing(0),
+        padding: theme.spacing(1),
+        paddingBottom: theme.spacing(2),
         marginBottom: "5%",
         textAlign: 'left'
     },
