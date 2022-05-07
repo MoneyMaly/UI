@@ -244,7 +244,7 @@ export default function ComparatorSortingGrid(props) {
         return (
             <div>
                 <Button variant="outlined" color="primary" size="small" style={{ marginLeft: 16 }} onClick={handleClickOpen} title={"Deal Information"}>
-                    Deal Info
+                    Deal 
                 </Button>
                 <Dialog open={open} onClose={handleClose} PaperComponent={PaperComponent} aria-labelledby="draggable-dialog-title">
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
@@ -274,7 +274,7 @@ export default function ComparatorSortingGrid(props) {
         },
         { field: 'date', headerName: 'Date', type: 'date', width: 200 },
         {
-            field: 'id', headerName: " ", type: 'number', hide: false, width: 120,
+            field: 'id', headerName: "Deal Info", type: 'number', type: 'date', hide: false, width: 140,
             renderCell: (params) => (
                 <strong>
                     <DealPopupDialog accountData={props.accountData}
