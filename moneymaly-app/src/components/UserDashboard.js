@@ -14,6 +14,8 @@ import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import ComparatorSortingGrid from './ExpensesAndIncome';
 import moment from "moment";
 import AnomalyChartTest from './AnomalyCharts';
+import clsx from 'clsx';
+import TimelineIcon from '@material-ui/icons/Timeline';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -209,7 +211,7 @@ export default function UserDashboard() {
                     <b> ssn: {userBankAccounts.selectedAccountData.ssn}</b>
                     </Typography>
                 </CardContent>
-                {/*CardActions disableSpacing>
+                <CardActions disableSpacing>
                     <IconButton
                         className={clsx(classes.expand, {
                             [classes.expandOpen]: expanded,
@@ -223,18 +225,11 @@ export default function UserDashboard() {
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
-                        <Typography paragraph>
-                            Add rice and stir very gently to distribute. Top with artichokes and peppers, and cook
-                            without stirring, until most of the liquid is absorbed, 15 to 18 minutes. Reduce heat to
-                            medium-low, add reserved shrimp and mussels, tucking them down into the rice, and cook
-                            again without stirring, until mussels have opened and rice is just tender, 5 to 7
-                            minutes more. (Discard any mussels that don’t open.)
-                            </Typography>
-                        <Typography>
-                            Set aside off of the heat to let rest for 10 minutes, and then serve.
-                            </Typography>
+                    <Paper className={classes.expensesAndIncomePaper}>
+                        <DisplayExpensesAndIncome />
+                    </Paper>
                     </CardContent>
-                    </Collapse*/}
+                    </Collapse>
             </Card>
         );
     };
@@ -553,13 +548,13 @@ export default function UserDashboard() {
                     </Grid>
                     <Grid item xs={12}>
                         <Paper className={classes.expensesAndIncomePaper}>
-                        <h1>Anomaly Dedector</h1>
+                        <h1><TimelineIcon fontSize='large' />Anomaly Dedector</h1>
                             <DisplayAnomalyGraphs />
                         </Paper>
                     </Grid>
                     <Grid item xs={12}>
                         <Paper className={classes.expensesAndIncomePaper}>
-                            <h1><SwapHorizIcon fontSize="medium" /> Expenses & Income</h1>
+                        <h1><SwapHorizIcon size="Medium" /> Expenses & Income</h1>
                             <DisplayExpensesAndIncome />
                         </Paper>
                     </Grid>                   
