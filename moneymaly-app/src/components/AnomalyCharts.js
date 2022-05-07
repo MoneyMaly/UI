@@ -55,7 +55,7 @@ export default class AnomalyChart extends React.Component {
                         itemTextPosition="bottom"
                     />
                     <Export enabled={true} />
-                    <Title text="Anomaly Expens Payments Detector">
+                    <Title text="Anomaly Expenses Payments Detector">
                         <Subtitle text="(2022 - 2022 : April - June)" />
                     </Title>
                     <Tooltip enabled={true} contentRender={customizeTooltip} />

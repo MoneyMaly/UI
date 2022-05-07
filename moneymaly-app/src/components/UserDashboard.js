@@ -22,13 +22,13 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1
     },
     expensesAndIncomePaper: {
-        padding: theme.spacing(2),
-        paddingLeft: theme.spacing(10),
+        padding: theme.spacing(1),
+        paddingLeft: theme.spacing(5),
         textAlign: 'left',
         color: theme.palette.primary.main
     },
     paper: {
-        padding: theme.spacing(1),
+        padding: theme.spacing(2),
         textAlign: 'center',
         color: theme.palette.primary.main
     },
@@ -52,11 +52,16 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(4)
     },    
     paperAccounts: {
-        padding: theme.spacing(10),
-        paddingBottom: theme.spacing(4),
+        padding: theme.spacing(2),
         textAlign: 'left',
         variant: 'outlined'
     },
+    paperAccounts2: {
+        padding: theme.spacing(2),
+        marginLeft: theme.spacing(-1),
+        textAlign: 'right',
+        variant: 'outlined'
+    },    
     expand: {
         transform: 'rotate(0deg)',
         marginLeft: 'auto',
@@ -110,8 +115,8 @@ export default function UserDashboard() {
     };
     function get_bank_account_anomaly_by_date() {
         get_account_anomaly_by_date(localStorage.getItem('username'), localStorage.getItem('token'),
-            userBankAccounts.selectedAccountData.account_number, selectedAnomalyDates.from_year, selectedAnomalyDates.to_year,
-            selectedAnomalyDates.from_month, selectedAnomalyDates.to_month)
+        userBankAccounts.selectedAccount, selectedAnomalyDates.from_year, selectedAnomalyDates.to_year, selectedAnomalyDates.from_month,
+        selectedAnomalyDates.to_month)
             .then(data => {
                 var result = [];
                 var subjects = [];
@@ -169,10 +174,10 @@ export default function UserDashboard() {
                     <TextField
                         id="outlined-select-user-account"
                         select
-                        label="Account"
+                        label="Bank Account"
                         value={userBankAccounts.selectedAccount}
                         onChange={handleAccountChange}
-                        helperText="Please select your account"
+                        helperText="Please select your bank account"
                         variant="outlined"
                     >
                         {userBankAccounts.account_list.map((account) => (
@@ -206,12 +211,11 @@ export default function UserDashboard() {
                     title={'Account Number:  ' + userBankAccounts.selectedAccount}
                     subheader={"Owner: " + userBankAccounts.selectedAccountData.owner}
                 />
-                <CardContent>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                    <b> ssn: {userBankAccounts.selectedAccountData.ssn}</b>
-                    </Typography>
+                <CardContent className={classes.expensesAndIncomePaper}>
+                    <h2><SwapHorizIcon fontSize="small" /> Expenses & Income</h2>
+                    <DisplayExpensesAndIncome />              
                 </CardContent>
-                <CardActions disableSpacing>
+                {/* <CardActions disableSpacing>
                     <IconButton
                         className={clsx(classes.expand, {
                             [classes.expandOpen]: expanded,
@@ -229,7 +233,7 @@ export default function UserDashboard() {
                         <DisplayExpensesAndIncome />
                     </Paper>
                     </CardContent>
-                    </Collapse>
+                    </Collapse>*/}
             </Card>
         );
     };
@@ -529,19 +533,18 @@ export default function UserDashboard() {
     return (
         IsUserTokenValid() ? (
             <div className={classes.root}>
-                <Grid container spacing={1}>
-                    <Grid item xs={12}>
+                <Grid container spacing={0}>
+                    <Grid item xs={9}>
                         <Paper className={classes.paper}>
                             <h1>MoneyMaly Dashboard</h1>
                         </Paper>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <Paper className={classes.paperAccounts} elevation={0}>
-                            <h2>Bank Accounts</h2>
+                    <Grid item xs={3}>
+                        <Paper className={classes.paperAccounts2} elevation={0}>
                             {renderSelectBankAccount()}
                         </Paper>
                     </Grid>
-                    <Grid item xs={12} sm={8}>
+                    <Grid item xs={12}>
                         <Paper className={classes.paperAccounts} elevation={0}>
                             {DisplaySelectedAccount()}
                         </Paper>
@@ -550,12 +553,6 @@ export default function UserDashboard() {
                         <Paper className={classes.expensesAndIncomePaper}>
                         <h1><TimelineIcon fontSize='large' />Anomaly Dedector</h1>
                             <DisplayAnomalyGraphs />
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Paper className={classes.expensesAndIncomePaper}>
-                        <h1><SwapHorizIcon size="Medium" /> Expenses & Income</h1>
-                            <DisplayExpensesAndIncome />
                         </Paper>
                     </Grid>                   
                 </Grid>
