@@ -113,14 +113,14 @@ export default function UserDashboard() {
                 setUserAccountBalances(prevState => ({ ...prevState, selectedBankAccountBalance: data, chartOpen: true }));
             });
     };
-    function get_bank_account_anomaly_by_date() {
+    function get_bank_account_anomaly_by_date(accountNumber = null) {
         get_account_anomaly_by_date(localStorage.getItem('username'), localStorage.getItem('token'),
-        userBankAccounts.selectedAccount, selectedAnomalyDates.from_year, selectedAnomalyDates.to_year, selectedAnomalyDates.from_month,
+        accountNumber, selectedAnomalyDates.from_year, selectedAnomalyDates.to_year, selectedAnomalyDates.from_month,
         selectedAnomalyDates.to_month)
-            .then(data => {
-                var result = [];
+        .then(dataResult => {
+            var result = [];
                 var subjects = [];
-                data.map((item, index) => {
+                dataResult.map((item, index) => {
                     var subject = item.sector + " - " + item.company;
                     subjects.push(subject);
                     item.payments.map((payment, index) => {
@@ -143,6 +143,9 @@ export default function UserDashboard() {
             get_user_bank_accounts_list(localStorage.getItem('username'), localStorage.getItem('token'))
                 .then(data => {
                     setUserBankAccounts(prevState => ({ ...prevState, account_list: data, selectedAccountData: data[0], selectedAccount: data[0].account_number }));
+                    if (data[0].account_number != null) {
+                        get_bank_account_anomaly_by_date(data[0].account_number);
+                    }
                 });
         }
     }, []);
@@ -312,7 +315,6 @@ export default function UserDashboard() {
                         </div>
                     ) :
                         (<div>
-                            <Alert severity="success">{userAccountBalances.selectedBankAccountBalance.length} Expenses And Income Detected For Selected Dates</Alert><br />
                             <ComparatorSortingGrid accountData={userBankAccounts.selectedAccountData} data={userAccountBalances.selectedBankAccountBalance.map((item, index) =>
                                 ({ price: item.price, subject: item.subject, date: moment(item.date).format("DD-MM-YYYY"), id: index }))} />
                         </div>
@@ -495,7 +497,7 @@ export default function UserDashboard() {
                         };
                     })}                    
                 </TextField>
-                <Button className={classes.showResultButton} onClick={get_bank_account_anomaly_by_date} variant="contained">GO!</Button>
+                <Button className={classes.showResultButton} onClick={() => get_bank_account_anomaly_by_date(userBankAccounts.selectedAccount)} variant="contained">GO!</Button>
                 <Button className={classes.closeResultButton} disabled={!userBankAccountAnomaly.chartOpen}
                     onClick={() => setUserBankAccountAnomaly(prevState => ({ ...prevState, chartOpen: false }))} variant="contained">Close</Button>
             </div>

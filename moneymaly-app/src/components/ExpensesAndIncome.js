@@ -14,6 +14,7 @@ import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
 import CachedIcon from '@material-ui/icons/Cached';
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -292,9 +293,9 @@ export default function ComparatorSortingGrid(props) {
         }
     ];
 
-    //ToDo: Add anomaly - get last 3 month by default
     return (
         <div style={{ flex: 1, flexDirection: 'row', textAlign: "center", marginRight: "5%" }}>
+            <Alert severity="success">{props.data.length} Expenses And Income Detected For Selected Dates</Alert><br />
             <DataGrid disableSelectionOnClick autoHeight autoPageSize rowsPerPageOptions={[10, 20, 50, 100]} sortModel={sortModel} rows={props.data} columns={columns} />
         </div>
     );
