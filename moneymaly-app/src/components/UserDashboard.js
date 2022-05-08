@@ -142,8 +142,8 @@ export default function UserDashboard() {
                 });
             get_user_bank_accounts_list(localStorage.getItem('username'), localStorage.getItem('token'))
                 .then(data => {
-                    setUserBankAccounts(prevState => ({ ...prevState, account_list: data, selectedAccountData: data[0], selectedAccount: data[0].account_number }));
-                    if (data[0].account_number != null) {
+                    if (data != null && data[0] != null) {
+                        setUserBankAccounts(prevState => ({ ...prevState, account_list: data, selectedAccountData: data[0], selectedAccount: data[0].account_number }));
                         get_bank_account_anomaly_by_date(data[0].account_number);
                     }
                 });
