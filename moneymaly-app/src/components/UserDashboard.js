@@ -311,8 +311,9 @@ export default function UserDashboard() {
                         </div>
                     ) :
                         (<div>
-                            <ComparatorSortingGrid accountData={userBankAccounts.selectedAccountData} data={userAccountBalances.selectedBankAccountBalance.map((item, index) =>
-                                ({ price: item.price, subject: item.subject, date: moment(item.date).format("DD-MM-YYYY"), id: index }))} />
+                            <ComparatorSortingGrid accountData={userBankAccounts.selectedAccountData}
+                                data={userAccountBalances.selectedBankAccountBalance.map((item, index) =>
+                                    ({ price: item.price, subject: item.subject, date: moment(item.date).format("DD-MM-YYYY"), id: index, ratio: 10 }))} />
                         </div>
                         ))
             );

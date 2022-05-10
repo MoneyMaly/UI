@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
-import { Dialog, DialogTitle } from '@material-ui/core';
+import { Dialog, DialogTitle, withStyles } from '@material-ui/core';
 import { Button, makeStyles, Paper, TextField } from '@material-ui/core';
 import { add_user_deal_by_account_number, remove_user_deals_by_account_number, get_user_deals_by_account_number } from '../adapters/bank_service_adapter';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -12,6 +12,8 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
 import CachedIcon from '@material-ui/icons/Cached';
 import Alert from '@material-ui/lab/Alert';
+import Rating from '@material-ui/lab/Rating';
+import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,7 +52,49 @@ const useStyles = makeStyles((theme) => ({
             color: '#fff'
         },
     },
+    stars: {
+        width: 200,
+        display: 'flex',
+        alignItems: 'center',
+    },
 }));
+
+const labels = {
+    0.5: 'Very Ridiculous',
+    1: 'Ridiculous',
+    1.5: 'Very Expensive',
+    2: 'Expensive',
+    2.5: 'Ok',
+    3: 'Ok+',
+    3.5: 'Good',
+    4: 'Good+',
+    4.5: 'Excellent',
+    5: 'Excellent+',
+};
+
+
+function HoverRating(props) {
+    const [value, setValue] = React.useState(props.ratio / 2);
+    const [hover, setHover] = React.useState(-1);
+    const classes = useStyles();
+
+    return (
+        <div className={classes.stars}>
+            <Rating
+                name="hover-feedback"
+                value={value}
+                precision={0.5}
+                onChange={(event, newValue) => {
+                    setValue(newValue);
+                }}
+                onChangeActive={(event, newHover) => {
+                    setHover(newHover);
+                }}
+            />
+            {value !== null && <Box ml={2}>{labels[hover !== -1 ? hover : value]}</Box>}
+        </div>
+    );
+}
 
 export default function ComparatorSortingGrid(props) {
     const classes = useStyles();
@@ -66,14 +110,6 @@ export default function ComparatorSortingGrid(props) {
                 setAccountDeals(prevState => ({ ...prevState, deals: data }));
             });
     }, []);
-
-    const get_selected_expenses_deal_info = (company) => {
-        var result = {};
-        accountDeals.deals.map((deal) => (deal.company === company) ?
-            (result = { sector: deal.sector, extra_info: deal.extra_info }) :
-            (result = { sector: '', extra_info: '' }));
-        return result;
-    };
 
     function DealPopupDialog(props) {
         const [selectedRowData, setSelectedRowData] = useState({
@@ -268,6 +304,17 @@ export default function ComparatorSortingGrid(props) {
             )
         },
         { field: 'date', headerName: 'Date', type: 'date', width: 200 },
+        {
+            field: 'ratio', headerName: 'Price Ratio', type: 'date', width: 260,
+            renderCell: (params) => (
+                <strong>
+                    {(accountDeals.deals.map((deal) => deal.company)).includes(props.data[params.id].subject) ?
+                        (
+                            <HoverRating ratio={params.value} />
+                        ) : (' ')}
+                </strong>
+            ),
+        },        
         {
             field: 'id', headerName: "Deal Info", type: 'date', hide: false, width: 140,
             renderCell: (params) => (
