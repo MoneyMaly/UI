@@ -23,6 +23,27 @@ export function user_token_validation(username, token) {
         });
 };
 
+export function update_user_data_with_token(username, token, phone, email) {
+    var url = urljoin(user_service_url, 'users')
+    return axios.put(url, null,
+        {
+            headers: { "Authorization": `Bearer ${token}` },
+            params: { username: username, phone: phone, email: email }
+        })
+        .then(
+            res => {
+                if (res.status === 200) {
+                    return res.data;
+                }
+                else {
+                    localStorage.clear();
+                }
+            })
+        .catch(err => {
+            console.log(err);
+            return null;
+        });
+};
 
 export function get_user_data_with_token(username, token) {
     var url = urljoin(user_service_url, 'users')

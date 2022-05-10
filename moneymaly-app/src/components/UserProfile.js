@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Button, Container, Grid, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
-import { get_user_data_with_token } from '../adapters/user_service_adapter';
+import { Avatar, Button, CardActions, Container, Grid, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
+import { get_user_data_with_token, update_user_data_with_token } from '../adapters/user_service_adapter';
 import { get_user_bank_accounts_list, delete_user_bank_accounts_list, add_user_bank_accounts_list } from '../adapters/bank_service_adapter';
 import { NavLink, Redirect } from 'react-router-dom';
 import Dialog from '@material-ui/core/Dialog';
@@ -10,9 +10,12 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Draggable from 'react-draggable';
 import DeleteTwoToneIcon from '@material-ui/icons/DeleteTwoTone';
+import SendIcon from '@material-ui/icons/Send';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import jwt_decode from "jwt-decode";
+import ContactMailIcon from '@material-ui/icons/ContactMail';
+import EditIcon from '@material-ui/icons/Edit';
 import clsx from 'clsx';
 import { Card, CardHeader, IconButton, CardContent } from '@material-ui/core';
 
@@ -59,7 +62,21 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.success.main,
         '&:hover': {
             color: theme.palette.success.light
-        }       
+        }
+    },
+    EditButton: {
+        padding: theme.spacing(1),
+        paddingRight: theme.spacing(2),
+        paddingLeft: theme.spacing(2),
+        backgroundColor: theme.palette.info.main,
+        color: "#fff",
+        '&:hover': {
+            backgroundColor: theme.palette.info.light,
+            color: "#fff"
+        }
+    },
+    EditButtonIcon: {
+        marginLeft: theme.spacing(1)               
     }
 }));
 
@@ -293,6 +310,100 @@ export default function UserProfile() {
             </div>
         );
     };
+    function update_user_data() {
+        get_user_data_with_token(localStorage.getItem('username'), localStorage.getItem('token'))
+            .then(data => {
+                setUserProfileData(data);
+            });
+    }
+
+    function DraggableEditUserInfo(props) {
+        const [open, setOpen] = React.useState(false);
+        const [userNewInfo, setUserNewInfo] = useState({
+            email: '',
+            phone: ''
+        });
+        const handleClickOpen = () => {
+            setOpen(true);
+        };
+        const handleClose = () => {
+            setOpen(false);
+        };
+        const phone_error = (userNewInfo.phone === null || userNewInfo.phone === '') ? false : isNaN(userNewInfo.phone.replace('+', '0'));
+        const handleChange = (e) => {
+            const { id, value } = e.target
+            setUserNewInfo(prevState => ({
+                ...prevState,
+                [id]: value
+            }));
+        };
+        const HandleNewUserInfo = () => {
+            update_user_data_with_token(localStorage.getItem('username'), localStorage.getItem('token'), userNewInfo.phone, userNewInfo.email)
+                .then(data => {
+                    setOpen(!data);
+                    update_user_data();
+                });
+        };
+
+        return (
+            <div>
+                <Button className={classes.EditButton} variant="contained" title={"Update Your Account Info"} onClick={handleClickOpen}>
+                    Edit<EditIcon className={classes.EditButtonIcon} />
+                </Button>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    PaperComponent={PaperComponent}
+                    aria-labelledby="draggable-dialog-title"
+                >
+                    <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                        <ContactMailIcon fontSize="large" style={{ color: "#209CEE", paddingRight: '10px' }} />Update Your Account Info
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText component={'span'} className={classes.dialogOffer}>
+                            <form noValidate>
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    value={userNewInfo.email}
+                                    fullWidth
+                                    id="email"
+                                    label="Email"
+                                    name="email"
+                                    autoFocus
+                                    onChange={handleChange}
+                                />
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    value={userNewInfo.phone}
+                                    fullWidth
+                                    id="phone"
+                                    label="Phone"
+                                    name="phone"
+                                    helperText={phone_error ? "" : "Numbers only"}
+                                    error={phone_error}
+                                    autoFocus
+                                    onChange={handleChange}
+                                />
+                            </form>
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions className={classes.dialogOffer}>
+                        <Button autoFocus onClick={handleClose} variant="contained">
+                            Cancel
+                        </Button>
+                        <Button onClick={HandleNewUserInfo} variant="contained" disabled={phone_error || userNewInfo.phone === '' || userNewInfo.email === ''} className={classes.EditButton}>
+                            Update
+                            <SendIcon style={{ paddingLeft: '6px' }} />
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    };
 
     function render_user_logged_in(data) {
         if (data != null && data.full_name) {
@@ -313,6 +424,9 @@ export default function UserProfile() {
                                 Phone:  <b>{data.phone}</b>
                             </Typography>
                         </CardContent>
+                        <CardActions>
+                            <DraggableEditUserInfo />
+                        </CardActions>
                     </Card>
                 </Paper>
             )
