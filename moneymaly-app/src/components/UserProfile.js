@@ -94,9 +94,9 @@ export default function UserProfile() {
             setOpen(false);
         };
         const [AddBankDataState, setAddBankDataState] = useState({
-            owner_name: null,
-            account_number: null,
-            ssn: null
+            deal_id: "",
+            price: "",
+            business_phone: ""
         });
         const handleChange = (e) => {
             const { id, value } = e.target

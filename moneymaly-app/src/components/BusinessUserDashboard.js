@@ -7,6 +7,13 @@ import { get_user_data_with_token } from '../adapters/user_service_adapter';
 import WidgetsIcon from '@material-ui/icons/Widgets';
 import SendIcon from '@material-ui/icons/Send';
 import SearchIcon from '@material-ui/icons/Search';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Draggable from 'react-draggable';
+import { send_new_offer_to_client_by_deal_id } from '../adapters/business_service_adapter';
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,7 +62,11 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: theme.spacing(1)
     },
     searchIcon: {
-        marginLeft: theme.spacing(1)        
+        marginLeft: theme.spacing(1) 
+    },
+    dialogOffer: {
+        padding: theme.spacing(2),
+        color: 'black'       
     }
 }));
 
@@ -67,18 +78,19 @@ export default function BussinessUserDashboard() {
         username: "",
         role: "",
         email: "",
-        full_name: ""
+        full_name: "",
+        phone: ""  
     });
 
     const [usersDeals, setUsersDeals] = useState({
-        deals: []
+        deals: null
     });
 
     const companySectors = ['', 'TV', 'Network', 'Cellular', 'Fitness', 'Car Insurenncae', 'Health Insurenncae'];
 
     const [sectors, setSectors] = useState({
         selectedSector: "",
-        isSelected: true
+        isSelectedValidation: true
     });
    
     useEffect(() => {
@@ -89,10 +101,93 @@ export default function BussinessUserDashboard() {
                 });
         }
     }, []);
+    function PaperComponent(props) {
+        return (
+            <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+                <Paper {...props} />
+            </Draggable>
+        );
+    }
+
+    function DraggableSendOfferToClientDialog(props) {
+        const [open, setOpen] = React.useState(false);
+        const [newOffer, setNewOffer] = useState({
+            price: ''
+        });
+        const handleClickOpen = () => {
+            setOpen(true);
+        };
+        const handleClose = () => {
+            setOpen(false);
+        };
+        const price_error = (newOffer.price === null || newOffer.price === '') ? false : isNaN(newOffer.price);
+        const handleChange = (e) => {
+            const { id, value } = e.target
+            setNewOffer(prevState => ({
+                ...prevState,
+                [id]: value
+            }));
+        };
+        const HandleSendOffer = (account_number) => {
+            send_new_offer_to_client_by_deal_id(localStorage.getItem('token'), props.id, newOffer.price, userProfileData.phone)
+                .then(data => {
+                    setOpen(!data);
+                });
+        };
+
+        return (
+            <div>
+                <Button variant="contained" title={"Send Offer to client"} onClick={handleClickOpen} className={classes.sendNewOffer}>Send Offer <SendIcon className={classes.sendIcon} /></Button>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    PaperComponent={PaperComponent}
+                    aria-labelledby="draggable-dialog-title"
+                >
+                    <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                        <WidgetsIcon fontSize="large" style={{ color: "#209CEE", paddingRight: '10px' }} />Send Offer To Client
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText component={'span'} className={classes.dialogOffer}>
+                            Send New offer to client for <b>{props.sector} sector</b>:
+                            <br /><u>Deal Info</u>:
+                            <li><b>{props.extra_info_key} - {props.extra_info_value}</b></li><br />
+                            <br /><u>Current Price: <b>{-1 * props.price}$</b></u>:
+                            <form noValidate>
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="price"
+                                    label="Price (USD)"
+                                    name="price"
+                                    autoFocus
+                                    helperText={price_error ? "" : "Numbers only"}
+                                    error={price_error}
+                                    onChange={handleChange}
+                                />
+                            </form>
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions className={classes.dialogOffer}>
+                        <Button autoFocus onClick={handleClose} variant="contained">
+                            Cancel
+                        </Button>
+                        <Button onClick={HandleSendOffer} variant="contained" style={{ backgroundColor: "#209CEE", color: "#fff" }}>
+                            Send Offer
+                            <SendIcon style={{ paddingLeft: '6px' }} />
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    };
 
     function renderSelectSector() {
         const handleSectorChanged = (event) => {
-            setSectors(prevState => ({ ...prevState, selectedSector: event.target.value, isSelected: true }))
+            setSectors(prevState => ({ ...prevState, selectedSector: event.target.value, isSelectedValidation: true }))
+            setUsersDeals(prevState => ({ ...prevState, deals: null }))        
         };
 
         function get_all_users_deals_by_sector() {
@@ -102,7 +197,7 @@ export default function BussinessUserDashboard() {
                         setUsersDeals(prevState => ({ ...prevState, deals: data }));
                     });
             } else {
-                setSectors(prevState => ({ ...prevState, isSelected: false }));
+                setSectors(prevState => ({ ...prevState, isSelectedValidation: false }));
             }
 
         };
@@ -117,7 +212,7 @@ export default function BussinessUserDashboard() {
                         value={sectors.selectedSector}
                         onChange={handleSectorChanged}
                         helperText="Please select sector"
-                        error={!sectors.isSelected}
+                        error={!sectors.isSelectedValidation}
                         variant="outlined"
                     >
                         {companySectors.map((item, index) => (
@@ -145,7 +240,7 @@ export default function BussinessUserDashboard() {
                             subheader={sector + " sector"}
                         />
                         <CardContent>
-                            <Typography variant="body2" component="p">
+                            <Typography variant="body2" component="span">
                                 id:  {id}<br />
                                 <u>Deal Info</u>: <br />
                                 <li>{extra_info_key} - {extra_info_value}</li><br />
@@ -153,12 +248,14 @@ export default function BussinessUserDashboard() {
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <Button variant="contained" title={"Send Offer to client"} className={classes.sendNewOffer}>Send Offer <SendIcon className={classes.sendIcon} /></Button>
+                            <DraggableSendOfferToClientDialog id={id} company={company} sector={sector} price={price} extra_info_key={extra_info_key} extra_info_value={extra_info_value} />
                         </CardActions>
                     </Card>
                 </Grid>
             );
         };
+        if (usersDeals.deals === null)
+        return
     
         return (
             usersDeals.deals.map((deal, index) => {
@@ -167,7 +264,23 @@ export default function BussinessUserDashboard() {
             })
         );
     };   
-
+    function renderDealsResultWithAlert() {
+        if (usersDeals.deals === null)
+            return null
+        if (usersDeals.deals === null && sectors.selectedSector === '')
+            return
+        return (
+            (usersDeals.deals.length === 0 && sectors.selectedSector != '') ? (
+                <div>
+                    <Alert severity="warning">No Users Deals Found For Selected Sector: {sectors.selectedSector}</Alert>
+                </div>
+            ) : (
+                <div>
+                    <Alert severity="success">Found {usersDeals.deals.length} Users Deals For {sectors.selectedSector} Sector</Alert>
+                </div>
+            )
+        );
+    };
     const IsUserTokenValid = () => {
         try {
             var tokenExp = jwt_decode(localStorage.getItem('token')).exp;
@@ -201,12 +314,9 @@ export default function BussinessUserDashboard() {
                     <Grid item xs={12}>
                         <Paper className={classes.paperUsersDeals}>
                             <h1>Users Deals</h1>
-                            {renderSelectSector()}
+                            {renderDealsResultWithAlert()}
                         </Paper>
                     </Grid>
-                    {renderDealsResult()}
-                    {renderDealsResult()}
-                    {renderDealsResult()}
                     {renderDealsResult()}
                     <Grid item xs={12}>
                         <div>ddd</div>
