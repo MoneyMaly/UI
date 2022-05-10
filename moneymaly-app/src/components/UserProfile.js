@@ -295,7 +295,7 @@ export default function UserProfile() {
     };
 
     function render_user_logged_in(data) {
-        if (data !== null && data.full_name) {
+        if (data != null && data.full_name) {
             return (
                 <Paper className={classes.paper} elevation={0}>
                     <h1>Account Information</h1>

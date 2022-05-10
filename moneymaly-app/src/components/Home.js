@@ -39,7 +39,7 @@ export default function Home() {
     };
 
         return (
-            (state.userData !== null && IsUserTokenValid()) ?
+            (state.userData != null && IsUserTokenValid()) ?
             (
                 <Container component="main" maxWidth="xs">
                     <h2 className="center">Home</h2>

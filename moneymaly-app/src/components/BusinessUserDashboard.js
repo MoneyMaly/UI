@@ -69,7 +69,7 @@ export default function BussinessUserDashboard() {
         };
 
         function get_all_users_deals_by_sector() {
-            if (sectors.selectedSector !== "" && sectors.selectedSector !== null) {
+            if (sectors.selectedSector != "" && sectors.selectedSector !== null) {
                 get_all_users_deals(localStorage.getItem("token"), sectors.selectedSector)
                     .then(data => {
                         setUsersDeals(prevState => ({ ...prevState, deals: data }));
