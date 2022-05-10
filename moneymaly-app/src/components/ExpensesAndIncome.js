@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import { Dialog, DialogTitle } from '@material-ui/core';
-import { Card, CardHeader, Avatar, IconButton, CardMedia, CardActions, CardContent, Button, Container, Grid, makeStyles, MenuItem, Paper, TextField, Typography } from '@material-ui/core';
-import { get_user_data_with_token } from '../adapters/user_service_adapter';
+import { Button, makeStyles, Paper, TextField } from '@material-ui/core';
 import { add_user_deal_by_account_number, remove_user_deals_by_account_number, get_user_deals_by_account_number } from '../adapters/bank_service_adapter';
-import { NavLink } from 'react-router-dom';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Draggable from 'react-draggable';
 import DeleteTwoToneIcon from '@material-ui/icons/DeleteTwoTone';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CardGiftcardIcon from '@material-ui/icons/CardGiftcard';
 import CachedIcon from '@material-ui/icons/Cached';
@@ -32,14 +29,12 @@ const useStyles = makeStyles((theme) => ({
     addButtonPopup: {
         color: "#fff",
         backgroundColor: theme.palette.success.main,
-        color: '#fff',
         '&:hover': {
             backgroundColor: theme.palette.success.light,
             color: '#fff'
         },
     },
     deleteButtonPopup: {
-        color: "#fff",
         backgroundColor: theme.palette.error.main,
         color: '#fff',
         '&:hover': {
@@ -50,7 +45,6 @@ const useStyles = makeStyles((theme) => ({
     updateButtonPopup: {
         color: "#fff",
         backgroundColor: theme.palette.warning.main,
-        color: '#fff',
         '&:hover': {
             backgroundColor: theme.palette.warning.light,
             color: '#fff'
@@ -75,7 +69,7 @@ export default function ComparatorSortingGrid(props) {
 
     const get_selected_expenses_deal_info = (company) => {
         var result = {};
-        accountDeals.deals.map((deal) => (deal.company == company) ?
+        accountDeals.deals.map((deal) => (deal.company === company) ?
             (result = { sector: deal.sector, extra_info: deal.extra_info }) :
             (result = { sector: '', extra_info: '' }));
         return result;
@@ -275,7 +269,7 @@ export default function ComparatorSortingGrid(props) {
         },
         { field: 'date', headerName: 'Date', type: 'date', width: 200 },
         {
-            field: 'id', headerName: "Deal Info", type: 'number', type: 'date', hide: false, width: 140,
+            field: 'id', headerName: "Deal Info", type: 'date', hide: false, width: 140,
             renderCell: (params) => (
                 <strong>
                     <DealPopupDialog accountData={props.accountData}

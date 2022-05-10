@@ -14,7 +14,7 @@ import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import jwt_decode from "jwt-decode";
 import clsx from 'clsx';
-import { Card, CardHeader, IconButton, CardActions, CardContent } from '@material-ui/core';
+import { Card, CardHeader, IconButton, CardContent } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,7 +49,6 @@ const useStyles = makeStyles((theme) => ({
     addButtonPopup: {
         color: "#fff",
         backgroundColor: theme.palette.success.main,
-        color: '#fff',
         '&:hover': {
             backgroundColor: theme.palette.success.light,
             color: '#fff'
@@ -76,7 +75,7 @@ export default function UserProfile() {
     const [userBankAccountsList, setUserBankAccountsList] = useState({
         account_list: []
     });
-
+    const [expanded] = React.useState(false);
     const classes = useStyles();
 
     function PaperComponent(props) {
@@ -296,7 +295,7 @@ export default function UserProfile() {
     };
 
     function render_user_logged_in(data) {
-        if (data != null && data.full_name) {
+        if (data !== null && data.full_name) {
             return (
                 <Paper className={classes.paper} elevation={0}>
                     <h1>Account Information</h1>

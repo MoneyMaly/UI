@@ -134,3 +134,19 @@ export function remove_user_deals_by_account_number(username, token, account_num
         }
     );
 };
+
+// Users Deals - Get all Users Deals Anonymously
+export function get_all_users_deals(token, sector) {
+    var url = urljoin(bank_service_url, 'deals', 'sectors', sector)
+    return axios.get(url, {
+        headers: { "Authorization": `Bearer ${token}` }
+    }).then(
+        res => {
+            return res.data;
+        },
+        err => {
+            console.log(err);
+            return null;
+        }
+    );
+}; 

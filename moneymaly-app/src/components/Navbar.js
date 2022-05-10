@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
     scrollUpFab: {
         color: "#fff",
         backgroundColor: '#209CEE',
-        color: '#fff',
         '&:hover': {
             backgroundColor: '#67bcf3',
             color: '#fff'

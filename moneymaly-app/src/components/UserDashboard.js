@@ -1,20 +1,17 @@
-import { Card, CardHeader, Avatar, IconButton, CardMedia, CardActions, CardContent, Button, Container, Grid, makeStyles, MenuItem, Paper, TextField, Typography } from '@material-ui/core';
+import { Card, CardHeader, CardContent, Button, Container, Grid, makeStyles, MenuItem, Paper, TextField } from '@material-ui/core';
 import jwt_decode from "jwt-decode";
 import filter from 'lodash/filter';
 import React, { useEffect, useState } from 'react';
 import { NavLink, Redirect } from 'react-router-dom';
-import { get_user_bank_accounts_list, get_user_monthly_balance, get_account_monthly_balance } from '../adapters/bank_service_adapter';
+import { get_user_bank_accounts_list, get_account_monthly_balance } from '../adapters/bank_service_adapter';
 import { get_user_data_with_token } from '../adapters/user_service_adapter';
 import { get_account_anomaly_by_date } from '../adapters/business_service_adapter';
 import Alert from '@material-ui/lab/Alert';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
-import Collapse from '@material-ui/core/Collapse';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import ComparatorSortingGrid from './ExpensesAndIncome';
 import moment from "moment";
 import AnomalyChartTest from './AnomalyCharts';
-import clsx from 'clsx';
 import TimelineIcon from '@material-ui/icons/Timeline';
 
 const useStyles = makeStyles((theme) => ({
@@ -37,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: theme.spacing(2),
         color: "#fff",
         backgroundColor: theme.palette.success.main,
-        color: '#fff',
         '&:hover': {
             backgroundColor: theme.palette.success.light,
             color: '#fff'
@@ -142,7 +138,7 @@ export default function UserDashboard() {
                 });
             get_user_bank_accounts_list(localStorage.getItem('username'), localStorage.getItem('token'))
                 .then(data => {
-                    if (data != null && data[0] != null) {
+                    if (data !== null && data[0] !== null) {
                         setUserBankAccounts(prevState => ({ ...prevState, account_list: data, selectedAccountData: data[0], selectedAccount: data[0].account_number }));
                         get_bank_account_anomaly_by_date(data[0].account_number);
                     }
@@ -534,7 +530,7 @@ export default function UserDashboard() {
    
     return (
         IsUserTokenValid() ? (
-            (localStorage.getItem('UserRole') != 'private') ? (
+            (localStorage.getItem('UserRole') !== 'private') ? (
                 <Redirect to="/BussinessUserDashboard" />
             ) : (
                 <div className={classes.root}>
