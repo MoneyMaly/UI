@@ -174,7 +174,7 @@ export default function BussinessUserDashboard() {
                         <Button autoFocus onClick={handleClose} variant="contained">
                             Cancel
                         </Button>
-                        <Button onClick={HandleSendOffer} variant="contained" style={{ backgroundColor: "#209CEE", color: "#fff" }}>
+                        <Button onClick={HandleSendOffer} disabled={price_error || newOffer.price === ''} variant="contained"  className={classes.sendNewOffer}>
                             Send Offer
                             <SendIcon style={{ paddingLeft: '6px' }} />
                         </Button>
