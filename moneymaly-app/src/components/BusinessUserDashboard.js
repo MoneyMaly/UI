@@ -145,7 +145,7 @@ export default function BussinessUserDashboard() {
                             subheader={sector + " sector"}
                         />
                         <CardContent>
-                            <Typography variant="body2" color="text" component="p">
+                            <Typography variant="body2" component="p">
                                 id:  {id}<br />
                                 <u>Deal Info</u>: <br />
                                 <li>{extra_info_key} - {extra_info_value}</li><br />
