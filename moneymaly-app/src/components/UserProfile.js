@@ -357,7 +357,7 @@ export default function UserProfile() {
                     aria-labelledby="draggable-dialog-title"
                 >
                     <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                        <ContactMailIcon fontSize="large" style={{ color: "#209CEE", paddingRight: '10px' }} />Update Your Account Info
+                        <ContactMailIcon fontSize="large" style={{ color: "black", paddingRight: '20px' }} />Update Your Account Info
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText component={'span'} className={classes.dialogOffer}>
