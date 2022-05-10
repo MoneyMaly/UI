@@ -12,6 +12,7 @@ import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import UserProfile from './components/UserProfile';
 import UserDashboard from './components/UserDashboard';
+import BussinessUserDashboard from './components/BussinessUserDashboard';
 
 function Copyright() {
     const style = {
@@ -50,6 +51,7 @@ export default function App() {
                     <Route path='/Signup' component={Signup} />
                     <Route path='/UserProfile' component={UserProfile} />
                     <Route path='/UserDashboard' component={UserDashboard} />
+                    <Route path='/BussinessUserDashboard' component={BussinessUserDashboard} />
                 </Switch>
                 <Copyright />
             </div>

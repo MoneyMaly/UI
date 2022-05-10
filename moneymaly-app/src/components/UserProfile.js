@@ -364,11 +364,19 @@ export default function UserProfile() {
                     <Grid item xs={12} sm={6}>
                         {render_user_logged_in(userProfileData)}
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Paper className={classes.paper}>
-                            {render_user_bank_accounts_list(userBankAccountsList)}
-                        </Paper>
-                    </Grid>
+                    {(localStorage.getItem('UserRole') === "private") ? (
+                        <Grid item xs={12} sm={6}>
+                            <Paper className={classes.paper} elevation={0}>
+                                {render_user_bank_accounts_list(userBankAccountsList)}
+                            </Paper>
+                        </Grid>
+                    ) : (
+                        <Grid item xs={12} sm={6}>
+                            <Paper className={classes.paper} elevation={0}>
+                                <h1>Current Offers</h1>
+                            </Paper>
+                        </Grid>
+                    )}                    
                 </Grid>
             </div>
         ) :

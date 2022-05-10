@@ -534,31 +534,35 @@ export default function UserDashboard() {
    
     return (
         IsUserTokenValid() ? (
-            <div className={classes.root}>
-                <Grid container spacing={0}>
-                    <Grid item xs={9}>
-                        <Paper className={classes.paper}>
-                            <h1>MoneyMaly Dashboard</h1>
-                        </Paper>
+            (localStorage.getItem('UserRole') != 'private') ? (
+                <Redirect to="/BussinessUserDashboard" />
+            ) : (
+                <div className={classes.root}>
+                    <Grid container spacing={0}>
+                        <Grid item xs={9}>
+                            <Paper className={classes.paper}>
+                                <h1>MoneyMaly Dashboard</h1>
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <Paper className={classes.paperAccounts2} elevation={0}>
+                                {renderSelectBankAccount()}
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Paper className={classes.paperAccounts} elevation={0}>
+                                {DisplaySelectedAccount()}
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Paper className={classes.expensesAndIncomePaper}>
+                                <h1><TimelineIcon fontSize='large' />Anomaly Dedector</h1>
+                                <DisplayAnomalyGraphs />
+                            </Paper>
+                        </Grid>           
                     </Grid>
-                    <Grid item xs={3}>
-                        <Paper className={classes.paperAccounts2} elevation={0}>
-                            {renderSelectBankAccount()}
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Paper className={classes.paperAccounts} elevation={0}>
-                            {DisplaySelectedAccount()}
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Paper className={classes.expensesAndIncomePaper}>
-                        <h1><TimelineIcon fontSize='large' />Anomaly Dedector</h1>
-                            <DisplayAnomalyGraphs />
-                        </Paper>
-                    </Grid>                   
-                </Grid>
-            </div>
+                    </div>
+            )                   
         ) :
             (
                 renderUserNotLoggedIn

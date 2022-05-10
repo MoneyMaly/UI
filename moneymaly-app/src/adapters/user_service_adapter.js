@@ -32,6 +32,7 @@ export function get_user_data_with_token(username, token) {
     }).then(
         res => {
             if (res.status === 200) {
+                localStorage.setItem('UserRole', res.data.role);
                 return res.data;
             }
             else {
