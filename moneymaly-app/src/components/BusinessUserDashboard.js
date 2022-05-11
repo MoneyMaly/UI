@@ -151,7 +151,7 @@ export default function BussinessUserDashboard() {
                         <DialogContentText component={'span'} className={classes.dialogOffer}>
                             Send New offer to client for <b>{props.sector} sector</b>:
                             <br /><u>Deal Info</u>:
-                            <li><b>{props.extra_info_key} - {props.extra_info_value}</b></li><br />
+                            <li><b>{props.extra_info_key} - {props.extra_info_value}</b></li>
                             <br /><u>Current Price: <b>{-1 * props.price}$</b></u>:
                             <form noValidate>
                                 <TextField
@@ -174,7 +174,7 @@ export default function BussinessUserDashboard() {
                         <Button autoFocus onClick={handleClose} variant="contained">
                             Cancel
                         </Button>
-                        <Button onClick={HandleSendOffer} disabled={price_error || newOffer.price === ''} variant="contained"  className={classes.sendNewOffer}>
+                        <Button onClick={HandleSendOffer} disabled={price_error || newOffer.price === ''} variant="contained" className={classes.sendNewOffer}>
                             Send Offer
                             <SendIcon style={{ paddingLeft: '6px' }} />
                         </Button>
@@ -241,7 +241,6 @@ export default function BussinessUserDashboard() {
                         />
                         <CardContent>
                             <Typography variant="body2" component="span">
-                                id:  {id}<br />
                                 <u>Deal Info</u>: <br />
                                 <li>{extra_info_key} - {extra_info_value}</li><br />
                                 <u>Price</u>:  {price * -1}$<br />
@@ -318,9 +317,6 @@ export default function BussinessUserDashboard() {
                         </Paper>
                     </Grid>
                     {renderDealsResult()}
-                    <Grid item xs={12}>
-                        <div>ddd</div>
-                    </Grid>
                 </Grid>
             </div>
         ) :

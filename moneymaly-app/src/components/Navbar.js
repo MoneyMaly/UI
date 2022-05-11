@@ -29,6 +29,7 @@ import Divider from '@material-ui/core/Divider';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
+import OffersNotifications from './AnomalyCount';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -322,13 +323,7 @@ export default function PrimarySearchAppBar(props) {
                     </Typography>
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
-                    <Tooltip title="My Messages" arrow>
-                            <IconButton aria-label="show 4 new mails" color="inherit">
-                                <Badge badgeContent={4} color="secondary">
-                                    <MailIcon />
-                                </Badge>
-                            </IconButton>
-                        </Tooltip>
+                    <OffersNotifications />
                         <Tooltip title="Notifications" arrow>
                             <IconButton aria-label="show 17 new notifications" color="inherit">
                                 <Badge badgeContent={17} color="secondary">

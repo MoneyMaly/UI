@@ -280,7 +280,7 @@ export default function UserProfile() {
                 <Typography variant="body2" color="textSecondary" component="p" >
                         <b>Account Owner: {bank_account.owner}</b><br />
                         <b>ssn: {bank_account.ssn}</b><br />
-                        <b>Username: {bank_account.username}</b>
+                        <b>Username: {bank_account.username}</b><br />
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component={'span'}>
                         <div className={clsx(classes.expand, { [classes.expandOpen]: expanded })}>

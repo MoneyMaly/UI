@@ -50,4 +50,43 @@ export function send_new_offer_to_client_by_deal_id(token, deal_id, price, busin
                 return null;
             }
         );
+    };
+
+    // Business Service - Reject New Offer
+    export function reject_new_offer(token, username, account_number, company, new_price, business_phone) {
+        var url = urljoin(business_service_url, 'users', username, 'bankaccounts', account_number, 'offers', 'companies', company, 'offer_status', 'Rejected');
+        return axios.put(url, null,
+            {
+                params: { new_price: new_price, business_phone: business_phone },
+                headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+            })
+            .then(
+                res => {
+                    return res.data;
+                },
+                err => {
+                    console.log(err);
+                    return null;
+                }
+            );
+    
+    };
+    
+    // Business Service - Get All User New Offers
+    export function get_all_user_new_offers(token, username) {
+        var url = urljoin(business_service_url, 'users', username, 'offers', 'offer_status', 'Open');
+        return axios.get(url,
+            {
+                headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+            })
+            .then(
+                res => {
+                    return res.data;
+                },
+                err => {
+                    console.log(err);
+                    return null;
+                }
+            );
+    
 }; 
