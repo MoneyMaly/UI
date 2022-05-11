@@ -299,6 +299,17 @@ export default function UserDashboard() {
         };
 
         function ExpensesAndIncomeObjects() {
+            const ratioDict = {
+                'yes': 9,
+                'AIG LTD': 7,
+                'HotNet': 3,
+                'HolmesPlace': 10,
+                'PartnerTV': 7,
+                'YellowGas': 6
+            };
+            const getRatioByDeal = (companyDealName) => {
+                return (ratioDict[companyDealName]) ? (ratioDict[companyDealName]) : (9)
+            };
             return (
                 !userAccountBalances.chartOpen ? (
                     <div>
