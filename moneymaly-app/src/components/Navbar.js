@@ -406,6 +406,10 @@ export default function PrimarySearchAppBar(props) {
                 </List>
                 <Divider />
                 <List>
+                    <ListItem button component={Link} to={'/Login'} onClick={handleDrawerClose}>
+                        <IconButton color="inherit"><ExitToAppIcon /></IconButton>
+                        Login
+                    </ListItem>                
                     <ListItem button component={Link} to={'/Logout'} onClick={handleDrawerClose}>
                         <IconButton color="inherit"><ExitToAppIcon /></IconButton>
                         Logout
