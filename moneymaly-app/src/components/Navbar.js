@@ -30,6 +30,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import OffersNotifications from './AnomalyCount';
+import logoo from '../images/final-logo.png';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -318,9 +319,7 @@ export default function PrimarySearchAppBar(props) {
                     >
                         <MenuIcon />
                     </IconButton>                    
-                    <Typography className={classes.title} variant="h6" noWrap>
-                        MoneyMaly
-                    </Typography>
+                    <img src={logoo} width={'9%'}></img>
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
                     {(localStorage.getItem('UserRole') === "private") ? (<OffersNotifications />) : ("")}
