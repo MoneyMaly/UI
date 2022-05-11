@@ -121,6 +121,11 @@ export default function OffersNotifications(props) {
         )
     };
 
+        // ToDo: pulling theard
+    // while (false){
+    //     setTimeout(featch_offers_data, 2000)
+    // }
+
     return (
         <div>
             <IconButton title={offers.count + " New Offers Waiting For You"} aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} color="inherit" >

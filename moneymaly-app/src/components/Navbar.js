@@ -323,7 +323,7 @@ export default function PrimarySearchAppBar(props) {
                     </Typography>
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
-                    <OffersNotifications />
+                    {(localStorage.getItem('UserRole') === "private") ? (<OffersNotifications />) : ("")}
                         <Tooltip title="Notifications" arrow>
                             <IconButton aria-label="show 17 new notifications" color="inherit">
                                 <Badge badgeContent={17} color="secondary">
