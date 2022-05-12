@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     },
     expand: {
         marginLeft: "90%",
-        marginTop: "-10%",
+        marginTop: theme.spacing(-5),
         transition: theme.transitions.create('transform', {
             duration: theme.transitions.duration.shortest,
         }),
@@ -277,17 +277,15 @@ export default function UserProfile() {
                     subheader={"Owner: " + bank_account.owner}
                 />
                 <CardContent>
-                <Typography variant="body2" color="textSecondary" component="p" >
+                <Typography variant="body2" color="textSecondary" component={'span'} >
                         <b>Account Owner: {bank_account.owner}</b><br />
                         <b>ssn: {bank_account.ssn}</b><br />
-                        <b>Username: {bank_account.username}</b><br />
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component={'span'}>
-                        <div className={clsx(classes.expand, { [classes.expandOpen]: expanded })}>
-                            <DraggableRemoveBankAccountDialog account_number={bank_account.account_number} />
-                        </div>
+                        <b>Username: {bank_account.username}</b>                       
                     </Typography>
                 </CardContent>
+                <div className={clsx(classes.expand, { [classes.expandOpen]: expanded })}>
+                    <DraggableRemoveBankAccountDialog account_number={bank_account.account_number} />
+                </div>
             </Card>
         );
     };

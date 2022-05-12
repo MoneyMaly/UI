@@ -13,6 +13,7 @@ import ComparatorSortingGrid from './ExpensesAndIncome';
 import moment from "moment";
 import AnomalyChartTest from './AnomalyCharts';
 import TimelineIcon from '@material-ui/icons/Timeline';
+import AssessmentIcon from '@material-ui/icons/Assessment';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -549,7 +550,9 @@ export default function UserDashboard() {
                     <Grid container spacing={0}>
                         <Grid item xs={9}>
                             <Paper className={classes.paper}>
-                                <h1>MoneyMaly Dashboard</h1>
+                                <div style={{ paddingLeft: "45%" }}>
+                                    <h1><AssessmentIcon fontSize={'inherit'} />&nbsp;MoneyMaly Dashboard</h1>
+                                </div>
                             </Paper>
                         </Grid>
                         <Grid item xs={3}>
