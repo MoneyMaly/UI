@@ -4,8 +4,10 @@ import MailIcon from '@material-ui/icons/Mail';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
-import { MenuItem, Paper, Card, CardHeader, Avatar, CardActions, CardContent, Typography } from '@material-ui/core';
-import { get_all_user_new_offers, reject_new_offer } from '../adapters/business_service_adapter';
+import CachedIcon from '@material-ui/icons/Cached';
+import { Redirect } from 'react-router-dom';
+import { Paper, Card, CardActions, CardContent, Typography } from '@material-ui/core';
+import { get_all_user_new_offers, reject_new_offer, accept_new_offer } from '../adapters/business_service_adapter';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -59,8 +61,15 @@ export default function OffersNotifications(props) {
             });
     };
 
-    const handleAcceptOffer = () => {
-        setAnchorEl(null);
+    const handleAcceptOffer = (offerObj) => {
+        accept_new_offer(localStorage.getItem('token'), offerObj.username, offerObj.account_number, offerObj.company, offerObj.new_price, offerObj.business_phone)
+            .then(data => {
+                featch_offers_data();
+                var text = "Hey,%0AMy name is " + offerObj.username + ".%0AI'm highly interested in your offer.%0A%0A*Offer Details*: %0A%20%20%20%20Sector: " + offerObj.sector + '%0A%20%20%20%20Company: ' + offerObj.company + '%0A%20%20%20%20*Deal Info*: %0A%20%20%20%20' + offerObj.extra_info_key + " - " + offerObj.extra_info_value + " %0A%20%20%20%20Price: " + offerObj.new_price + "%0A%0APlease Contact with me as soon as you can :)";
+                var phoneNumber = offerObj.business_phone.replace('+', '');
+                window.open("https://wa.me/" + phoneNumber + "?text=" + text, "_blank");
+                setAnchorEl(null);
+            });
     };
 
     const offerObject = (offerObj, index_key) => {
@@ -78,7 +87,7 @@ export default function OffersNotifications(props) {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button variant="outlined" className={classes.acceptButton} onClick={handleAcceptOffer}>
+                    <Button variant="outlined" className={classes.acceptButton} onClick={() => handleAcceptOffer(offerObj)}>
                         Accept
                     </Button>
                     <Button variant="outlined" color="secondary" onClick={() => handleRejectOffer(offerObj)}>
@@ -142,8 +151,10 @@ export default function OffersNotifications(props) {
             >
                 <Paper className={classes.paper} elevation={0}>
                     <h3>{offers.count} Suggested New Offers: </h3>
-                    {/* {var extra_info_splited = Object.keys(deal.extra_info).map((key, i) => ({ key: key, value: deal.extra_info[key] }))[0]} */}
                     {get_all_opend_offers()}
+                    <Button variant="outlined" title={"Reload Offers"} onClick={featch_offers_data}>
+                        <CachedIcon />
+                    </Button>
                 </Paper>
             </Menu>
         </div>

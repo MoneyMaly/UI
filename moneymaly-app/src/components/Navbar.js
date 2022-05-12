@@ -29,8 +29,10 @@ import Divider from '@material-ui/core/Divider';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
-import OffersNotifications from './AnomalyCount';
+import OffersNotifications from './OffersNotifications';
 import logoo from '../images/final-logo.png';
+import jwt_decode from "jwt-decode";
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -270,12 +272,8 @@ export default function PrimarySearchAppBar(props) {
             onClose={handleMobileMenuClose}
         >
             <MenuItem>
-                <IconButton aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="secondary">
-                        <MailIcon />
-                    </Badge>
-                </IconButton>
-                <p>Messages</p>
+            {(localStorage.getItem('UserRole') === "private") ? (<OffersNotifications />) : ("")}
+                <p>Offers</p>
             </MenuItem>
             <MenuItem>
                 <IconButton aria-label="show 11 new notifications" color="inherit">
@@ -291,12 +289,6 @@ export default function PrimarySearchAppBar(props) {
                 </IconButton>
                 <p>My Profile</p>
             </MenuItem>
-            <MenuItem component={Link} to={'/UserDashboard'}>
-                <IconButton color="inherit">
-                    <AssessmentIcon />
-                </IconButton>
-                <p>Dashboard</p>
-            </MenuItem>
             <MenuItem component={Link} to={'/Logout'}>
                 <IconButton color="inherit">
                     <ExitToAppIcon />
@@ -306,6 +298,18 @@ export default function PrimarySearchAppBar(props) {
         </Menu>
     );
 
+    const IsUserTokenValid = () => {
+        try {
+            var tokenExp = jwt_decode(localStorage.getItem('token')).exp;
+            if (tokenExp < Date.now() / 1000) {
+                return false;
+            }
+            return true;
+        } catch (InvalidTokenError) {
+            console.warn('Invalid User Token')
+            return false;
+        }
+    };
     return (
         <div className={classes.grow}>
             <AppBar position="static" className={clsx(classesNew.appBar, { [classesNew.appBarShift]: open, })}  >
@@ -400,14 +404,20 @@ export default function PrimarySearchAppBar(props) {
                 </List>
                 <Divider />
                 <List>
-                    <ListItem button component={Link} to={'/Login'} onClick={handleDrawerClose}>
-                        <IconButton color="inherit"><ExitToAppIcon /></IconButton>
+                {
+                        (!IsUserTokenValid()) ?
+                            (
+                                <ListItem button component={Link} to={'/Login'} onClick={handleDrawerClose}>
+                                    <IconButton color="inherit"><ExitToAppIcon /></IconButton>
                         Login
-                    </ListItem>                
-                    <ListItem button component={Link} to={'/Logout'} onClick={handleDrawerClose}>
-                        <IconButton color="inherit"><ExitToAppIcon /></IconButton>
+                        </ListItem>
+                            ) : (
+                                <ListItem button component={Link} to={'/Logout'} onClick={handleDrawerClose}>
+                                    <IconButton color="inherit"><ExitToAppIcon /></IconButton>
                         Logout
-                    </ListItem>
+                        </ListItem>
+                            )
+                    }
                 </List>
                 <Divider />
             </Drawer>
