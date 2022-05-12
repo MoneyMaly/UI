@@ -32,6 +32,7 @@ import ListItem from '@material-ui/core/ListItem';
 import OffersNotifications from './OffersNotifications';
 import logoo from '../images/final-logo.png';
 import jwt_decode from "jwt-decode";
+import AnomalyNotifications from './AnomalyNotifications';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -327,13 +328,7 @@ export default function PrimarySearchAppBar(props) {
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
                     {(localStorage.getItem('UserRole') === "private") ? (<OffersNotifications />) : ("")}
-                        <Tooltip title="Notifications" arrow>
-                            <IconButton aria-label="show 17 new notifications" color="inherit">
-                                <Badge badgeContent={17} color="secondary">
-                                    <NotificationsIcon />
-                                </Badge>
-                            </IconButton>
-                        </Tooltip>
+                    {(localStorage.getItem('UserRole') === "private") ? (<AnomalyNotifications />) : ("")}
                         <Tooltip title="My Profile" arrow>
                             <IconButton color="inherit">
                             <Link to="/UserProfile" style={{ color: 'inherit', textDecoration: 'inherit' }}>
