@@ -393,11 +393,11 @@ export default function PrimarySearchAppBar(props) {
                 </List>
                 <Divider />
                 <List>
-                    <ListItem button component={Link} to={'/About'} onClick={handleDrawerClose}>
+                    <ListItem button component={Link} to={'/'} onClick={handleDrawerClose}>
                         <IconButton color="inherit"><InfoIcon /></IconButton>
                         About
                     </ListItem>
-                    <ListItem button component={Link} to={'/Contact'} onClick={handleDrawerClose}>
+                    <ListItem button component={Link} to={'/'} onClick={handleDrawerClose}>
                         <IconButton color="inherit"><MailIcon /></IconButton>
                         Contact Us
                     </ListItem>
