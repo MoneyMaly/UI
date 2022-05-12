@@ -310,10 +310,10 @@ button {
 }
 
 .banner_main {
-     background: #0c0f38;
-     background-size: 100% 100%;
-     background-repeat: no-repeat;
-     padding-bottom: 90px;
+    background: rgb(255, 255, 255);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    padding-bottom: 90px;
 }
 
 .text-bg h1 {
@@ -340,8 +340,8 @@ button {
 
 .text-bg a {
      font-size: 16px;
-     background-color: #fff;
-     color: #000;
+     background-color: #209CEE;
+     color: #fff;
      padding: 10px 0px;
      width: 100%;
      max-width: 190px;
@@ -424,10 +424,10 @@ button {
 /** Services section **/
 
 .Services {
-     margin-top: 90px;
-     padding: 60px 0;
-     background: #0c0f38;
-     font-family: Poppins;
+    margin-top: 0px;
+    padding: 60px 0;
+    background: #209CEE;
+    font-family: Poppins;
 }
 
 .Services .titlepage {
@@ -465,6 +465,17 @@ button {
      font-weight: 500;
 }
 
+a.read_more.bg {
+    background-color: #209CEE;
+    color: #fff;
+
+}
+
+a.read_more.bg:hover {
+    background-color: #000000;
+    color: #fff;
+}
+
 .Services .Services-box {
      text-align: center;
      background-color: transparent;
@@ -476,8 +487,8 @@ button {
 }
 
 .Services .Services-box:hover {
-     background: #8308eb;
-     transition: ease-in all 0.5s;
+    background: #0e78be;
+    transition: ease-in all 0.5s;
      cursor: pointer;
 }
 
@@ -490,7 +501,7 @@ button {
 .read_more {
      font-size: 16px;
      background-color: #fff;
-     color: #000;
+     color: #209CEE;
      padding: 10px 0px;
      width: 100%;
      max-width: 190px;
@@ -502,8 +513,8 @@ button {
 }
 
 .read_more:hover {
-     background: #8308eb;
-     color: #fff;
+    background: #000;
+    color: #fff;
 }
 
 
