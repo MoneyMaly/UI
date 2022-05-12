@@ -14,6 +14,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Draggable from 'react-draggable';
 import { send_new_offer_to_client_by_deal_id } from '../adapters/business_service_adapter';
 import Alert from '@material-ui/lab/Alert';
+import CurrentOffersDashboard from './CurrentOffersDashboard';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -311,6 +312,9 @@ export default function BussinessUserDashboard() {
                         </Paper>
                     </Grid>
                     <Grid item xs={12}>
+                        {CurrentOffersDashboard()}
+                    </Grid>
+                    <Grid item xs={12}>
                         <Paper className={classes.paperUsersDeals}>
                             <h1>Users Deals</h1>
                             {renderDealsResultWithAlert()}
@@ -318,6 +322,8 @@ export default function BussinessUserDashboard() {
                     </Grid>
                     {renderDealsResult()}
                 </Grid>
+                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
             </div>
         ) :
             (
