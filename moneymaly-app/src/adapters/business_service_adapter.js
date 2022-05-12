@@ -92,38 +92,58 @@ export function accept_new_offer(token, username, account_number, company, new_p
 
 };
 
-    // Business Service - Get All User New Offers
-    export function get_all_user_new_offers(token, username) {
-        var url = urljoin(business_service_url, 'users', username, 'offers', 'offer_status', 'Open');
-        return axios.get(url,
-            {
-                headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
-            })
-            .then(
-                res => {
-                    return res.data;
-                },
-                err => {
-                    console.log(err);
-                    return null;
-                }
-            );
-        };
+// Business Service - Get All User New Offers
+export function get_all_user_new_offers(token, username) {
+    var url = urljoin(business_service_url, 'users', username, 'offers', 'offer_status', 'Open');
+    return axios.get(url,
+        {
+            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+        })
+        .then(
+            res => {
+                return res.data;
+            },
+            err => {
+                console.log(err);
+                return null;
+            }
+        );
+    };
 
-        // Business Service - Get All User Anomaly
-        export function get_all_user_anomalies(token, username) {
-            var url = urljoin(business_service_url, 'users', username, 'deals', 'anomaly');
-            return axios.get(url,
-                {
-                    headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
-                })
-                .then(
-                    res => {
-                        return res.data;
-                    },
-                    err => {
-                        console.log(err);
-                        return null;
-                    }
-                );          
-}; 
+// Business Service - Get All User Anomaly
+export function get_all_user_anomalies(token, username) {
+    var url = urljoin(business_service_url, 'users', username, 'deals', 'anomaly');
+    return axios.get(url,
+        {
+            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+        })
+        .then(
+            res => {
+                return res.data;
+            },
+            err => {
+                console.log(err);
+                    return null;
+            }
+        );          
+    };
+
+// Business Service - Get All Business Offers
+export function get_all_business_offers(token, business_phone) {
+    var url = urljoin(business_service_url, 'offers', 'business_phone', business_phone.replace('+', '%2B'));
+    console.log(url);
+    console.log(business_phone);
+    return axios.get(url,
+        {
+            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+        })
+        .then(
+            res => {
+                return res.data;
+            },
+            err => {
+                console.log(err);
+                return null;
+            }
+        );     
+};

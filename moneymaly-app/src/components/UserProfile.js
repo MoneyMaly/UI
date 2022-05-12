@@ -18,6 +18,7 @@ import ContactMailIcon from '@material-ui/icons/ContactMail';
 import EditIcon from '@material-ui/icons/Edit';
 import clsx from 'clsx';
 import { Card, CardHeader, IconButton, CardContent } from '@material-ui/core';
+import CurrentOffers from './CurrentOffers';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -485,6 +486,7 @@ export default function UserProfile() {
                         <Grid item xs={12} sm={6}>
                             <Paper className={classes.paper} elevation={0}>
                                 <h1>Current Offers</h1>
+                                {CurrentOffers()}
                             </Paper>
                         </Grid>
                     )}                    
