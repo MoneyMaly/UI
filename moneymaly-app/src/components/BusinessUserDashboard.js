@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function BussinessUserDashboard() {
+export default function BusinessUserDashboard() {
     const classes = useStyles();
 
     const [userProfileData, setUserProfileData] = useState({
@@ -308,7 +308,7 @@ export default function BussinessUserDashboard() {
                 <Grid container spacing={1}>
                     <Grid item xs={12}>
                         <Paper className={classes.paper}>
-                        <h1>Bussiness Dashboard</h1>
+                        <h1>Business Dashboard</h1>
                         </Paper>
                     </Grid>
                     <Grid item xs={12}>
