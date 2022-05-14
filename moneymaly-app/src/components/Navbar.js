@@ -324,7 +324,6 @@ export default function PrimarySearchAppBar(props) {
                     >
                         <MenuIcon />
                     </IconButton>                    
-                    <img src={logoo} width={'9%'}></img>
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
                     {(localStorage.getItem('UserRole') === "private") ? (<OffersNotifications />) : ("")}
