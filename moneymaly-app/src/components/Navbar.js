@@ -30,7 +30,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import OffersNotifications from './OffersNotifications';
-import logoo from '../images/final-logo.png';
+//import logoo from '../images/final-logo.png';
 import jwt_decode from "jwt-decode";
 import AnomalyNotifications from './AnomalyNotifications';
 

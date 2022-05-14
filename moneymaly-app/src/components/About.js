@@ -7,7 +7,6 @@ import mobileImage from '../images/MoneyLifecycle-mobile.png';
 import bankImage from '../images/chart-banking.svg';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import { Card } from '@material-ui/core';
 
@@ -18,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 1,
         align: 'center',
-        paddingBottom: theme.spacing(4),
         paddingTop: theme.spacing(2),
         paddingBottom: theme.spacing(2),
         color: '#209cee'

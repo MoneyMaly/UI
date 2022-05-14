@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const bank_service_url = 'http://192.116.98.107:8082';
+const bank_service_url = 'http://192.116.98.107:8083';
 var urljoin = require('url-join');
 
 // Users Bank Accounts  
@@ -53,6 +53,7 @@ export function delete_user_bank_accounts_list(username, account_number, token) 
         }
     );
 }; 
+
 // Banking Service - Account Balance
 export function get_user_monthly_balance(username, token, month, year) {
     var url = urljoin(bank_service_url, 'users', username, 'bankaccounts', 'balance')
@@ -119,6 +120,7 @@ export function add_user_deal_by_account_number(username, token, account_number,
             }
         );
 };
+
 // Users Deals
 export function remove_user_deals_by_account_number(username, token, account_number, company) {
     var url = urljoin(bank_service_url, 'users', username, 'bankaccounts', account_number, 'deals', 'company', company);
