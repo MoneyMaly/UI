@@ -12,7 +12,7 @@ import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import UserProfile from './components/UserProfile';
 import UserDashboard from './components/UserDashboard';
-import BussinessUserDashboard from './components/BusinessUserDashboard';
+import BusinessUserDashboard from './components/BusinessUserDashboard';
 
 function Copyright() {
     const style = {
