@@ -96,6 +96,7 @@ function HoverRating(props) {
     );
 }
 
+
 export default function ComparatorSortingGrid(props) {
     const classes = useStyles();
     const companySectors = ['', 'TV', 'Network', 'Cellular', 'Fitness', 'Car Insurenncae', 'Health Insurenncae'];
@@ -131,7 +132,6 @@ export default function ComparatorSortingGrid(props) {
                 </Draggable>
             );
         };
-
         const handleChange = (e) => {
             const { id, value } = e.target
             setSelectedRowData(prevState => ({
@@ -151,19 +151,19 @@ export default function ComparatorSortingGrid(props) {
                         });
                 });
         };
-    };
-    const handleSubmitRemoveDeal = () => {
-        setOpen(false);
-        var extra_info_json = {};
-        extra_info_json[companySectorsDict[selectedRowData.sector]] = selectedRowData.extra_info;
-        remove_user_deals_by_account_number(props.accountData.username, localStorage.getItem('token'), props.accountData.account_number, props.subject)
-            .then(result => {
-                get_user_deals_by_account_number(props.accountData.username, localStorage.getItem('token'), props.accountData.account_number)
-                    .then(data => {
-                        setAccountDeals(prevState => ({ ...prevState, deals: data }));
-                    });
-            });
-    };
+    
+        const handleSubmitRemoveDeal = () => {
+            setOpen(false);
+            var extra_info_json = {};
+            extra_info_json[companySectorsDict[selectedRowData.sector]] = selectedRowData.extra_info;
+            remove_user_deals_by_account_number(props.accountData.username, localStorage.getItem('token'), props.accountData.account_number, props.subject)
+                .then(result => {
+                    get_user_deals_by_account_number(props.accountData.username, localStorage.getItem('token'), props.accountData.account_number)
+                        .then(data => {
+                            setAccountDeals(prevState => ({ ...prevState, deals: data }));
+                        });
+                });
+        };
 
         const extra_info_input_error = (selectedRowData.extra_info === null || selectedRowData.extra_info === '') ? false : isNaN(selectedRowData.extra_info);
         const AddDealDialogContent = () => {
@@ -291,6 +291,8 @@ export default function ComparatorSortingGrid(props) {
                 </Dialog>
             </div>
         );
+    };
+
 
     const columns = [
         { field: 'subject', headerName: "Company", width: 140 },
