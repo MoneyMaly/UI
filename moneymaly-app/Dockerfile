@@ -3,9 +3,9 @@ FROM node:alpine as builder
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package*.json ./
-RUN yarn install --silent && yarn install react-scripts@3.4.1 -g --silent
+RUN npm install --silent && npm install react-scripts@3.4.1 -g --silent
 COPY . ./
-RUN yarn run build
+RUN npm run build
 
 # production environment
 FROM nginx:stable-alpine
