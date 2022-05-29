@@ -548,7 +548,7 @@ export default function UserDashboard() {
     return (
         IsUserTokenValid() ? (
             (localStorage.getItem('UserRole') != 'private') ? (
-                <Redirect to="/BussinessUserDashboard" />
+                <Redirect to="/BusinessUserDashboard" />
             ) : (
                 <div className={classes.root}>
                     <Grid container spacing={0}>
