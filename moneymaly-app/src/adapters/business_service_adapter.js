@@ -95,8 +95,8 @@ export function accept_new_offer(token, username, account_number, company, new_p
 };
 
 // Business Service - Get All User New Offers
-export function get_all_user_new_offers(token, username) {
-    var url = urljoin(business_service_url, 'users', username, 'offers', 'offer_status', 'Open');
+export function get_all_user_new_offers(token, username, accountNumber) {
+    var url = urljoin(business_service_url, 'users', username, 'bankaccounts',  accountNumber, 'offers', 'offer_status', 'Open');
     return axios.get(url,
         {
             headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
@@ -113,8 +113,9 @@ export function get_all_user_new_offers(token, username) {
     };
 
 // Business Service - Get All User Anomaly
-export function get_all_user_anomalies(token, username) {
-    var url = urljoin(business_service_url, 'users', username, 'deals', 'anomaly');
+export function get_all_user_anomalies(token, username, accountNumber) {
+    console.log('token, username, accountNumber :>> ', token, username, accountNumber)
+    var url = urljoin(business_service_url, 'users', username, 'bankaccounts', accountNumber, 'deals', 'anomaly');
     return axios.get(url,
         {
             headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
@@ -133,8 +134,6 @@ export function get_all_user_anomalies(token, username) {
 // Business Service - Get All Business Offers
 export function get_all_business_offers(token, business_phone) {
     var url = urljoin(business_service_url, 'offers', 'business_phone', business_phone.replace('+', '%2B'));
-    console.log(url);
-    console.log(business_phone);
     return axios.get(url,
         {
             headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }

@@ -107,6 +107,7 @@ export default function UserDashboard() {
         get_account_monthly_balance(localStorage.getItem('username'), localStorage.getItem('token'),
             userBankAccounts.selectedAccountData.account_number, userBankAccounts.selectedAccountData.ssn, userBankAccounts.selectedAccountData.owner, month, year)
             .then(data => {
+                console.log('data :>> ', data);
                 setUserAccountBalances(prevState => ({ ...prevState, selectedBankAccountBalance: data, chartOpen: true }));
             });
     };
@@ -115,20 +116,23 @@ export default function UserDashboard() {
         accountNumber, selectedAnomalyDates.from_year, selectedAnomalyDates.to_year, selectedAnomalyDates.from_month,
         selectedAnomalyDates.to_month)
         .then(dataResult => {
+            if (!dataResult) return;
             var result = [];
-                var subjects = [];
-                dataResult.map((item, index) => {
-                    var subject = item.sector + " - " + item.company;
-                    subjects.push(subject);
-                    item.payments.map((payment, index) => {
+            var subjects = [];
+            dataResult.forEach((item) => {
+                var subject = item.sector + " - " + item.company;
+                subjects.push(subject);
+                if (item.payments) {
+                    item.payments.forEach((payment, index) => {
                         var object = { 'date': moment(payment.date).toDate() };
                         object[subject] = payment.price + " $";
                         result.push(object);
                     })
-                });
-                result.sort((a, b) => b.date - a.date);
-                setUserBankAccountAnomaly(prevState => ({ ...prevState, selectedBankAccountAnomaly: result, anomalySubjects: subjects, chartOpen: true }));
+                }
             });
+            result.sort((a, b) => b.date - a.date);
+            setUserBankAccountAnomaly(prevState => ({ ...prevState, selectedBankAccountAnomaly: result, anomalySubjects: subjects, chartOpen: true }));
+        });
     };
 
     useEffect(() => {
@@ -287,7 +291,7 @@ export default function UserDashboard() {
             label: 'December'
         }
     ];
-    const years = Array.apply(null, Array(7)).map(function (_, i) { return { 'value': i + 2015, 'label': i + 2015 }; })    
+    const years = Array.apply(null, Array(8)).map(function (_, i) { return { 'value': i + 2015, 'label': i + 2015 }; })    
     
     function DisplayExpensesAndIncome() {
         const handleDateChange = (e) => {

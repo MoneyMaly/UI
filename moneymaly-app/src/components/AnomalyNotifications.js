@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import CachedIcon from '@material-ui/icons/Cached';
-import { Redirect } from 'react-router-dom';
+import axios from 'axios';
 import { Paper, Card, CardActions, CardContent, Typography } from '@material-ui/core';
 import { get_all_user_anomalies } from '../adapters/business_service_adapter';
 import Alert from '@material-ui/lab/Alert';
@@ -55,19 +55,33 @@ export default function AnomalyNotifications(props) {
     };
 
 
-    function featch_anomaly_data() {
-        get_all_user_anomalies(localStorage.getItem('token'), localStorage.getItem('username'))
-            .then(data => {
-                var current_count = 0;
-                data.accounts_anomaly.map((accountAnomaly) => {
-                    current_count += accountAnomaly.anomalies_count;
-                });
-                setAnomaly(prevState => ({ ...prevState, accounts_anomaly: data.accounts_anomaly, count: current_count }))
-            });
+    async function fetch_anomaly_data() {
+        const username = localStorage.getItem('username');
+        const {data: accounts} = await axios.get(
+            `http://vmedu246.mtacloud.co.il:8083/users/${username}/bankaccounts`
+        );
+        const accountAnomaliesPromises = accounts.map(account => {
+            const {account_number} = account;
+            return get_all_user_anomalies(localStorage.getItem('token'), username, account_number);
+        });
+        const allAccountAnomalies = await Promise.all(accountAnomaliesPromises);
+        const anomalyList = allAccountAnomalies.reduce(
+            (allAnomalyList, accountResponse) =>([...allAnomalyList, ...accountResponse.data.accounts_anomaly]),
+            []
+        );
+        setAnomaly(prevState => ({ ...prevState, accounts_anomaly: anomalyList, count: anomalyList.length }))
+        // get_all_user_anomalies(localStorage.getItem('token'), localStorage.getItem('username'))
+        //     .then(data => {
+        //         var current_count = 0;
+        //         data.accounts_anomaly.map((accountAnomaly) => {
+        //             current_count += accountAnomaly.anomalies_count;
+        //         });
+        //         setAnomaly(prevState => ({ ...prevState, accounts_anomaly: data.accounts_anomaly, count: current_count }))
+        //     });
     };
 
     useEffect(() => {
-        featch_anomaly_data();
+        fetch_anomaly_data();
     }, []);
 
 
@@ -99,7 +113,7 @@ export default function AnomalyNotifications(props) {
                             </div>)
                     })}
 
-                    <Button variant="outlined" title={"Reload Offers"} onClick={featch_anomaly_data}>
+                    <Button variant="outlined" title={"Reload Offers"} onClick={fetch_anomaly_data}>
                         <CachedIcon />
                     </Button>
                 </Paper>

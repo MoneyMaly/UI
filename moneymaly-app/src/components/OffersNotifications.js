@@ -8,6 +8,7 @@ import CachedIcon from '@material-ui/icons/Cached';
 import { Redirect } from 'react-router-dom';
 import { Paper, Card, CardActions, CardContent, Typography } from '@material-ui/core';
 import { get_all_user_new_offers, reject_new_offer, accept_new_offer } from '../adapters/business_service_adapter';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -98,11 +99,22 @@ export default function OffersNotifications(props) {
         );
     };
 
-    function featch_offers_data() {
-        get_all_user_new_offers(localStorage.getItem('token'), localStorage.getItem('username'))
-            .then(data => {
-                setOffers(prevState => ({ ...prevState, offers: data, count: data.length }))
-            });
+    async function featch_offers_data() {
+        const username = localStorage.getItem('username');
+        const {data: accounts} = await axios.get(
+            `http://vmedu246.mtacloud.co.il:8083/users/${username}/bankaccounts`
+        );
+        const accountOfferPromises = accounts.map(account => {
+            const {account_number} = account;
+            return get_all_user_new_offers(localStorage.getItem('token'), username, account_number);
+        });
+        const allAccountOffers = await Promise.all(accountOfferPromises);
+        const offerList = allAccountOffers.reduce(
+            (allOfferList, accountResponse) =>([...allOfferList, ...accountResponse]),
+            []
+        );
+        
+        setOffers(prevState => ({ ...prevState, offers: offerList, count: offerList.length }))
     };
 
     useEffect(() => {
