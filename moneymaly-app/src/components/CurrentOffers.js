@@ -53,7 +53,7 @@ export default function CurrentOffers() {
 
     });
 
-    function featch_offers_data(phone_number) {
+    async function featch_offers_data(phone_number) {
         get_all_business_offers(localStorage.getItem('token'), phone_number)
             .then(data => {
                 console.log(data);
