@@ -101,7 +101,7 @@ export default function UserDashboard() {
         from_year: 2022,
         to_year: 2022,
         from_month: 4,
-        to_month: 6
+        to_month: 5
     });
     function get_bank_account_balance(month, year) {
         get_account_monthly_balance(localStorage.getItem('username'), localStorage.getItem('token'),
